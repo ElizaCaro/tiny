@@ -1,0 +1,26 @@
+program 	-> funciones cuerpo_progra
+funciones 	-> tipo funcion cuerpo_progra2 | void funcion cuerpo_progra | E
+funcion 	-> NOMBRE LPAREN decl_var RPAREN 
+tipo 		-> INT | BOOLEAN
+decl_var	-> tipo lista_var | E | lista_var
+lista_var	-> var, lista_var | var, tipo lista_var | var
+var 		-> ID | ID LCORCHE NUM RCORCHE
+cuerpo_progra  -> BEGIN stmt_seq END
+cuerpo_progra2 -> BEGIN stmt_seq RETURN stmt_seq END
+stmt_seq	-> stmt SEMI stmt_seq | E
+stmt 		-> if_stmt | repeat_stmt | assign_stmt | read_stmt | write_stmt | for_stmt | decl_var | call_funciones | error
+if_stmt		-> IF exp THEN stmt_seq END | IF exp THEN stmt_seq ELSE stmt_seq END
+repeat_stmt -> REPEAT stmt_seq UNTIL exp
+assign_stmt -> ID ASSIGN exp | ID ASSIGN funcion
+read_stmt 	-> READ ID
+write_stmt 	-> WRITE exp
+for_stmt 	-> FOR LPAREN assign_stmt SEMI exp SEMI assign_stmt RPAREN  stmt_seq END
+call_funciones -> funcion | assign_stmt
+exp 		-> simple_exp  opbin simple_exp | simple_exp
+simple_exp  -> simple_exp PLUS term | simple_exp MINUS term | term
+term 		-> term TIMES factor | term OVER factor | factor
+factor 		-> LPAREN exp RPAREN  | NUM | ID | error
+opbin		-> oprel | oplog
+oprel		-> LT | LE | GT | GE | EQ | NE
+oplog 		-> AND | OR
+
