@@ -35,6 +35,7 @@ import java_cup.runtime.*;
 
 digito		= [0-9]
 numero		= {digito}+
+bol 		= true | false
 letra			= [a-zA-Z]
 identificador	= {letra}+
 nuevalinea		= \n | \n\r | \r\n
@@ -236,6 +237,12 @@ espacio		= [ \t]+
 {	
 	if(debug) System.out.println("token NUM");
 	return sf.newSymbol("NUM",sym.NUM,new Integer(yytext()));
+}
+
+{bol}
+{
+	if (debug) System.out.println("token BOL");
+	return sf-newSymbol("BOL",sym.BOL,new boolean(yytext()));
 }
 
 {identificador}	

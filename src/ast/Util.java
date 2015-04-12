@@ -11,6 +11,7 @@ public class Util {
 		    printSpaces();
 		    if (raiz instanceof  NodoIf)
 		    	System.out.println("If");
+		    
 		    else if (raiz instanceof  NodoRepeat)
 		    	System.out.println("Repeat");
 		    
