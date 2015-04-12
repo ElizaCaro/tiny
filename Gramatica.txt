@@ -1,6 +1,7 @@
-program 	-> funciones cuerpo_progra
+program 	-> secuencias
+secuencias -> funciones cuerpo_progra
 funciones 	-> tipo funcion cuerpo_progra2 | void funcion cuerpo_progra | E
-funcion 	-> NOMBRE LPAREN decl_var RPAREN 
+funcion 	-> ID LPAREN decl_var RPAREN 
 tipo 		-> INT | BOOLEAN
 decl_var	-> tipo lista_var | E | lista_var
 lista_var	-> var, lista_var | var, tipo lista_var | var
@@ -19,7 +20,7 @@ call_funciones -> funcion | assign_stmt
 exp 		-> simple_exp  opbin simple_exp | simple_exp
 simple_exp  -> simple_exp PLUS term | simple_exp MINUS term | term
 term 		-> term TIMES factor | term OVER factor | factor
-factor 		-> LPAREN exp RPAREN  | NUM | ID | error
+factor 		-> LPAREN exp RPAREN  | NUM | ID | BOL| error
 opbin		-> oprel | oplog
 oprel		-> LT | LE | GT | GE | EQ | NE
 oplog 		-> AND | OR
