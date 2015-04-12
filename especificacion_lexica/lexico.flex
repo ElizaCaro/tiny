@@ -233,6 +233,12 @@ espacio		= [ \t]+
 	return sf.newSymbol("SEMI",sym.SEMI);
 }
 
+","
+{
+	if(debug) System.out.println("token COMA");
+	return sf.newSymbol("COMA",sym.COMA);
+}
+
 {numero}        
 {	
 	if(debug) System.out.println("token NUM");

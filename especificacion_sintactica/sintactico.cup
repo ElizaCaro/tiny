@@ -22,23 +22,47 @@ terminal ELSE;
 terminal END;
 terminal REPEAT;
 terminal UNTIL;
+terminal FOR;
+terminal BEGIN;
+terminal RETURN;
 terminal READ;
 terminal WRITE;
 terminal String ID;
 terminal Integer NUM;
+terminal boolean BOL;
 terminal ASSIGN;
+terminal INT;
+terminal BOOLEAN;
+terminal VOID;
+terminal AND;
+terminal OR;
 terminal EQ;
+terminal NE;
+terminal LE;
 terminal LT;
+terminal GE;
+terminal GE;
 terminal PLUS;
 terminal MINUS;
 terminal TIMES;
 terminal OVER;
 terminal LPAREN;
 terminal RPAREN;
+terminal LCORCHE;
+terminal RCORCHE;
 terminal SEMI;
 
 /* Simbolos No Terminales */
 non terminal program;
+non terminal NodoBase secuencias;
+non terminal NodoBase funciones;
+non terminal NodoBase funcion;
+non terminal NodoBase tipo;
+non terminal NodoBase decl_var;
+non terminal NodoBase lista_var;
+non terminal NodoBase var;
+non terminal NodoBase cuerpo_progra;
+non terminal NodoBase cuerpo_progra2;
 non terminal NodoBase stmt_seq;
 non terminal NodoBase stmt;
 non terminal NodoBase if_stmt;
@@ -46,15 +70,23 @@ non terminal NodoBase repeat_stmt;
 non terminal NodoBase assign_stmt;
 non terminal NodoBase read_stmt;
 non terminal NodoBase write_stmt;
+non terminal NodoBase for_stmt;
+non terminal NodoBase call_funciones;
 non terminal NodoBase exp;
 non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
+non terminal NodoBase opbin;
+non terminal NodoBase oprel;
+non terminal NodoBase oplog;
 
 /* Precedencia de operadores */
 precedence left PLUS;
 precedence left MINUS;
 precedence left TIMES;
+precedence left OVER;
+precedence left LPAREN;
+precedence left RPAREN;
 
 
 /* REGLAS GRAMATICALES */
