@@ -134,7 +134,7 @@ espacio		= [ \t]+
 "OR"             
 {	
 	if(debug) System.out.println("token OR");
-	return sf.newSymbol("OR",sym.OR;
+	return sf.newSymbol("OR",sym.OR);
 }
 
 ":="            
@@ -188,7 +188,7 @@ espacio		= [ \t]+
 "-"            
  {
  	if(debug) System.out.println("token MINUS");
-	return sf.newSymbol("MINUS",sym.MINUS)	
+	return sf.newSymbol("MINUS",sym.MINUS);
 }
 
 "*"             
@@ -239,6 +239,12 @@ espacio		= [ \t]+
 	return sf.newSymbol("COMA",sym.COMA);
 }
 
+" "
+{
+	if (debug) System.out.println("token VACIO");
+	return sf.newSymbol("VACIO",sym.VACIO);
+}
+
 {numero}        
 {	
 	if(debug) System.out.println("token NUM");
@@ -248,7 +254,7 @@ espacio		= [ \t]+
 {bol}
 {
 	if (debug) System.out.println("token BOL");
-	return sf-newSymbol("BOL",sym.BOL,new boolean(yytext()));
+	return sf.newSymbol("BOL",sym.BOL,new boolean(yytext()));
 }
 
 {identificador}	

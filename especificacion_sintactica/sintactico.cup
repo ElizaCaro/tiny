@@ -51,6 +51,7 @@ terminal RPAREN;
 terminal LCORCHE;
 terminal RCORCHE;
 terminal SEMI;
+terminal COMA;
 
 /* Simbolos No Terminales */
 non terminal program;
