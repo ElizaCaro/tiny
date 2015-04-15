@@ -1,0 +1,23 @@
+void inicial(int a, int ab)
+begin
+	write x;
+
+end;
+
+int iniciasda(boolean a, int b) 
+begin
+read x;
+return incis()+2;
+end;
+
+boolean incis()
+begin
+read x;
+return a;
+end;
+
+
+begin
+	int x;
+	x:= iniciasda(incis(),2);
+end;
