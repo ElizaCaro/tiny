@@ -82,7 +82,7 @@ public class Generador {
 		if(nodo.TieneHermano())
 			generar(nodo.getHermanoDerecha());
 	}else
-		System.out.println("¡¡¡ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
+		System.out.println("ï¿½ï¿½ï¿½ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
 }
 
 	private static void generarIf(NodoBase nodo){
@@ -163,7 +163,7 @@ public class Generador {
 	private static void generarValor(NodoBase nodo){
     	NodoValor n = (NodoValor)nodo;
     	if(UtGen.debug)	UtGen.emitirComentario("-> constante");
-    	UtGen.emitirRM("LDC", UtGen.AC, n.getValor(), 0, "cargar constante: "+n.getValor().toString());
+    	UtGen.emitirRM("LDC", UtGen.AC, n.getVint(), 0, "cargar constante: "+n.getVint().toString());
     	if(UtGen.debug)	UtGen.emitirComentario("<- constante");
 	}
 	

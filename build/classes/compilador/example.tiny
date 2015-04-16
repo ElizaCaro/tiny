@@ -1,23 +1,60 @@
-void inicial(int a, int ab)
+int myfunc(int a,boolean b)
 begin
 	write x;
-
+	return (a+b);
 end;
 
-int iniciasda(boolean a, int b) 
+int factorial()
 begin
-read x;
-return incis()+2;
+	read x;
+	int fact;
+	fact:=0;
+	if 0 < x then
+		fact := 1;
+	  	repeat
+	    	fact := fact * x;
+	    	x := x - 1;
+	  	until x = 0;
+	end;
+	return x;
 end;
 
-boolean incis()
+void myproc()
 begin
-read x;
-return a;
+	int a[10];
+	for(x:=1;x<10;x:=x+1)
+		a[x]:=x;
+		if x>=7 and x<10 then
+			write jodete;
+		end;
+	end;
 end;
 
+begin 
+	int a,b[1],c;
+	a:=1;
+	c:=a*a+3;
+	boolean d,e,g[3];
+	d:=true;
+	c:=myfunc(a,d);
 
-begin
-	int x;
-	x:= iniciasda(incis(),2);
+	if d!=false or 1=d and c=1 or c>=3 then
+		myproc();
+	else
+		b[0]:=b[0*a];
+	end;
+
+	read a;
+	read b[0];
+	write a/1;
+	write b[0];
+	write factorial();
+
+	a:=(2+1)*4+(3/(3+1));
+	a:=c[(2+1)*4+(3/(3+1))];
+
+	b[1-1]:=2-2+(-1);
+	c:=-1;
+	
+
 end;

@@ -1,0 +1,15 @@
+int wew()
+begin
+	if 0 < x
+	then
+		write x;
+	end;
+	return eliza;
+end;
+
+begin
+	if 0 < x
+	then
+		write x;
+	end;
+end;

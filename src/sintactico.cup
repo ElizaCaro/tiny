@@ -1,0 +1,176 @@
+package compilador;
+
+import java_cup.runtime.*;
+import ast.*;
+
+action code {:
+	private boolean modoDepuracion=false;
+	private NodoBase ast=null;
+	private int lineanum=0;
+	
+	//Debe ser llamada solo despues de un parse(), en caso contrario retornara null siempre;
+	public NodoBase getASTroot(){
+		return ast;
+	}
+:}
+
+/* Simbolos Terminales */
+
+terminal IF;
+terminal THEN;
+terminal ELSE;
+terminal END;
+terminal REPEAT;
+terminal UNTIL;
+terminal FOR;
+terminal BEGIN;
+terminal READ;
+terminal WRITE;
+terminal String ID;
+terminal Integer NUM;
+terminal Boolean BOL;
+terminal ASSIGN;
+terminal INT;
+terminal BOOLEAN;
+terminal VOID;
+terminal AND;
+terminal OR;
+terminal EQ;
+terminal NE;
+terminal LE;
+terminal LT;
+terminal GE;
+terminal GT;
+terminal PLUS;
+terminal MINUS;
+terminal TIMES;
+terminal OVER;
+terminal LPAREN;
+terminal RPAREN;
+terminal LCORCHE;
+terminal RCORCHE;
+terminal SEMI;
+terminal COMA;
+terminal RETURN;
+
+/* Simbolos No Terminales */
+non terminal raiz;
+non terminal NodoBase program;
+non terminal NodoBase bloque;
+non terminal NodoBase stmt_seq;
+non terminal NodoBase stmt;
+non terminal NodoBase if_stmt;
+non terminal NodoBase repeat_stmt;
+non terminal NodoBase assign_stmt;
+non terminal NodoBase read_stmt;
+non terminal NodoBase write_stmt;
+non terminal NodoBase for_stmt;
+non terminal NodoBase call_funciones;
+non terminal NodoBase tipo;
+non terminal NodoBase funciones;
+non terminal NodoBase funcion;
+non terminal NodoBase f_Retorna;
+non terminal NodoBase f_SinRetorno;
+non terminal NodoBase parametros;
+non terminal NodoBase parametro;
+non terminal NodoBase argumentos;
+non terminal NodoBase decl_var;
+non terminal NodoBase lista_var;
+non terminal NodoBase var;
+non terminal NodoBase exp;
+non terminal NodoBase exp_and;
+non terminal NodoBase exp_rel;
+non terminal NodoBase simple_exp;
+non terminal NodoBase term;
+non terminal NodoBase factor;
+
+
+/* Precedencia de operadores */
+
+precedence left OR;
+precedence left AND;
+precedence left LT;
+precedence left GT;
+precedence left LE;
+precedence left GE;
+precedence left NE;
+precedence left EQ;
+precedence left PLUS;
+precedence left MINUS;
+precedence left TIMES;
+precedence left OVER;
+precedence left LCORCHE;
+precedence left RCORCHE;
+precedence left LPAREN;
+precedence left RPAREN;
+
+
+/* REGLAS GRAMATICALES */
+raiz		::= program:p{::};
+program		::= funciones:f bloque:b {::};
+bloque 		::= BEGIN stmt_seq END SEMI {::};
+stmt_seq	::= stmt_seq:s stmt:se SEMI | stmt:s SEMI;
+stmt        ::= 
+			if_stmt:sif	{::}
+			|repeat_stmt:srep	{::}
+			| assign_stmt:sasi	{::}
+            | read_stmt:slec	{::}
+            | write_stmt:sesc	{::}
+            | decl_var:sdec 	{::}
+            | for_stmt:sfor		{::}
+            | call_funciones:scall {::}
+            | error {::}
+            ;
+
+if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END {::}
+			  | IF exp:ex THEN stmt_seq:pthen ELSE stmt_seq:pelse END{::};
+repeat_stmt ::= REPEAT stmt_seq:cuerpo UNTIL exp:prueba	{::};
+assign_stmt ::= ID:variable {::} ASSIGN exp:ex {::} 
+				|ID:variable LCORCHE NUM RCORCHE ASSIGN exp:ex {::} ;
+read_stmt   ::= READ exp:ex{::};
+write_stmt  ::= WRITE exp:ex {::};
+for_stmt 	::= FOR LPAREN assign_stmt:a SEMI exp:e SEMI assign_stmt:aa RPAREN stmt_seq:sq END{::};
+tipo 		::= INT|BOOLEAN;
+funciones 	::= funciones:f funcion:fu {::} | funcion:f {::};
+funcion 	::= f_Retorna:fr {::} | f_SinRetorno:fsr {::};
+f_Retorna 	::= tipo:t ID LPAREN RPAREN BEGIN stmt_seq RETURN exp:ex SEMI END SEMI{::} 
+				|tipo:t ID LPAREN parametros:p RPAREN BEGIN stmt_seq RETURN exp:ex SEMI END SEMI{::}
+				;
+f_SinRetorno ::= VOID ID LPAREN RPAREN bloque:b {::}
+				|VOID ID LPAREN parametros:p RPAREN bloque:b {::}
+				;
+
+parametros 	::= parametros:pa COMA parametro:p {::} | parametro:p {::};
+parametro 	::= tipo:t ID {::};
+
+call_funciones ::= ID:variable LPAREN RPAREN{::} 
+				  |ID:variable LPAREN argumentos:a RPAREN{::};
+argumentos 	::= argumentos:a COMA exp:e{::} | exp:e{::};
+
+decl_var	::= tipo:t lista_var:l {::} | tipo:t assign_stmt:a {::} ;
+lista_var	::= var:v COMA lista_var:l {::} | var:v{::};
+var 		::= ID {::} | ID LCORCHE NUM RCORCHE {::};
+exp 		::= exp:e OR exp_and:ea {::}| exp_and:ea {::};
+exp_and 	::= exp_and:ea AND exp_rel:er {::} | exp_rel:er{::};
+exp_rel     ::= simple_exp:exI LT simple_exp:exD {::}
+				|simple_exp:exI GT simple_exp:exD {::}
+				|simple_exp:exI LE simple_exp:exD {::}
+				|simple_exp:exI GE simple_exp:exD {::}
+				|simple_exp:exI NE simple_exp:exD {::}
+				|simple_exp:exI EQ simple_exp:exD {::}
+				|simple_exp:exI{::};
+
+simple_exp  ::= simple_exp:exI PLUS term:t{::}
+				|simple_exp:exI MINUS term:t{::}
+				|term:t{::};
+
+term        ::= term:t TIMES factor:fa{::}
+				|term:t OVER factor:fa{::}
+				|factor:fa{::};
+
+factor		::= LPAREN exp:ex RPAREN{::}
+				|NUM:variable{::} 
+				|ID:variable{::}
+				|ID:variable LCORCHE NUM RCORCHE{::}
+				|BOL:variable{::}
+				|call_funciones:c{::};
