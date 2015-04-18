@@ -1,0 +1,95 @@
+
+int myfunc(int a,boolean b)
+begin
+	int a[10];
+	return a[a+b];
+	boolean c,d,e;
+	write factor;
+end;
+
+boolean myfunc2(int a,boolean b)
+begin
+	return z<2 and true;
+end;
+
+
+
+int factorial()
+begin
+	
+	read x; { input an integer }
+	if 0 < z and t > 0 then { don't compute if x <= 0 }
+	  fact := 1;
+	  repeat
+	    fact := fact * x;
+	    x := x - 1;
+	  until x = 0;
+	  return fact; { return factorial of x }
+	end;
+	read y;
+
+
+	a:=1; 
+	b:=2;
+
+
+	if 0 < x then { don't compute if x <= 0 }
+	  fact := 1;
+	  return fact;  { return factorial of x }
+	end;
+
+end;
+
+
+void myproc()
+begin
+	int a[10];
+	for(x:=1;x<10;x:=x+1)
+		a[x]:=x;
+		if x>=7 and x<10 then
+			return;
+		end;
+	end;
+	read w;
+end;
+
+begin 
+
+	int a,b[1],c;
+	
+	a:=1;
+	a:=-4;
+
+	c:=a*-8+3;
+	d:= a > 5 or b;
+	
+	boolean d,e,g[3],h[3],j;
+	d:=true;
+	c:=myfunc(a,d);
+
+	
+	if d!=false then
+		myproc();
+	else
+		b[0]:=b[0*a];
+	end;
+
+
+
+	read a;
+	read b[0];
+	write a/1;
+	write b[0];
+	write factorial();
+
+
+	a:=(2+1)*4+(3/(3+1));
+	a:=c[(2+1)*4+(3/(3+1))];
+
+	b[1-1]:=2-2+(-1);
+	c:=b[1-1 *b[func(a<2 and b[2] > 4 or false)]];
+	if ((x > 3 and b > 3) or (j < 3 or b)) then
+		x:=1;
+	end;
+	
+end;

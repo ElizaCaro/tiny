@@ -3,7 +3,7 @@ begin
 	return (a+b);
 end;
 
-int factorial()
+boolean factorial()
 begin
 	read x;
 	int fact;

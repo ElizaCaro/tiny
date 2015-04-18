@@ -17,7 +17,7 @@ public class Util {
                         System.out.println("For");
                     else if (raiz instanceof NodoDeclaracion)
                         System.out.println("Declaracion");
-		    else if (raiz instanceof  NodoLeer)  
+		    else if (raiz instanceof NodoLeer)  
 		    	System.out.println("Lectura: "+((NodoLeer)raiz).getIdentificador());
 		    else if (raiz instanceof  NodoEscribir)
 		    	System.out.println("Escribir");
@@ -48,6 +48,14 @@ public class Util {
 		    		|| raiz instanceof NodoValor
 		    		|| raiz instanceof NodoIdentificador )
 		    	imprimirNodo(raiz);
+                   
+                   else if (raiz instanceof NodoVariable)
+                   {
+                       if(((NodoVariable)raiz).getNumero()!=null)
+                        System.out.println(((NodoVariable)raiz).getIdentificador()+"["+((NodoVariable)raiz).getNumero()+"]");
+                       else
+                           System.out.println(((NodoVariable)raiz).getIdentificador());
+                   }
 		    else System.out.println("Tipo de nodo desconocido");
 		    
 		    
@@ -68,10 +76,8 @@ public class Util {
                         imprimirAST(((NodoFuncionRetorna)raiz).getTipo());
                         
                         printSpaces();
-                        System.out.println("ID, "+((NodoFuncionRetorna)raiz).getIdentificador());
+                        System.out.println("  ID, "+((NodoFuncionRetorna)raiz).getIdentificador());
                        
-                        
-                        
                         if(((NodoFuncionRetorna)raiz).getParametros()!=null){
                             printSpaces();
                             System.out.println("parametros");
@@ -84,13 +90,15 @@ public class Util {
                         printSpaces();
                         System.out.println("retorno");
                         imprimirAST(((NodoFuncionRetorna)raiz).getExpresion());
-                        
-                        
                     }
+                    
                     else if (raiz instanceof NodoFuncionSinRetorna){
                         printSpaces();
                         System.out.println("**Funcion sin Retorno**");
                         System.out.println("VOID");
+                        
+                        printSpaces();
+                        System.out.println("  ID, "+((NodoFuncionSinRetorna)raiz).getIdentificador());
                         
                         if(((NodoFuncionSinRetorna)raiz).getParametros()!=null){
                             printSpaces();
@@ -103,7 +111,22 @@ public class Util {
                         
                     }
                     
-		    if (raiz instanceof  NodoIf){
+                    if (raiz instanceof NodoParametro){
+                        printSpaces();
+                        System.out.println("**Parametros**");
+                        imprimirAST(((NodoParametro)raiz).getTipo());
+                        
+                        System.out.println("\tID, "+((NodoParametro)raiz).getIdentificador());
+                    }
+                    
+                    if  (raiz instanceof NodoDeclaracion){
+                        printSpaces();
+                        System.out.println("**Declaracion**");
+                        imprimirAST(((NodoDeclaracion)raiz).getTipo());
+                        imprimirAST(((NodoDeclaracion)raiz).getLis_asig());
+                    }
+                    
+                    if (raiz instanceof  NodoIf){
 		    	printSpaces();
 		    	System.out.println("**Prueba IF**");
 		    	imprimirAST(((NodoIf)raiz).getPrueba());
