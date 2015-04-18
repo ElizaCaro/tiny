@@ -13,23 +13,96 @@ public class Util {
 		    	System.out.println("If");
 		    else if (raiz instanceof  NodoRepeat)
 		    	System.out.println("Repeat");
-		    
-		    else if (raiz instanceof  NodoAsignacion)
-		    	System.out.println("Asignacion a: "+((NodoAsignacion)raiz).getIdentificador());
-
+                    else if (raiz instanceof NodoFor)
+                        System.out.println("For");
+                    else if (raiz instanceof NodoDeclaracion)
+                        System.out.println("Declaracion");
 		    else if (raiz instanceof  NodoLeer)  
 		    	System.out.println("Lectura: "+((NodoLeer)raiz).getIdentificador());
-
 		    else if (raiz instanceof  NodoEscribir)
 		    	System.out.println("Escribir");
-		    
-		    else if (raiz instanceof NodoOperacion
+                    else if (raiz instanceof NodoEstructura)
+                          System.out.println("Estructura");
+                    else if (raiz instanceof NodoFuncionRetorna){
+                          System.out.println("Funcion con Retorno");                        }
+                    else if (raiz instanceof NodoFuncionSinRetorna)
+                          System.out.println("Funcion sin Retorno");
+                    else if (raiz instanceof NodoParametro)
+                          System.out.println("Parametro");
+		    else 
+                        if (raiz instanceof  NodoAsignacion)
+                        {
+                            if(((NodoAsignacion)raiz).getPosicion()!=null) //vector
+                                System.out.println("Asignacion a: "+((NodoAsignacion)raiz).getIdentificador()+"["+((NodoAsignacion)raiz).getPosicion()+"]");            
+                            else
+                                System.out.println("Asignacion a: "+((NodoAsignacion)raiz).getIdentificador());
+                        }
+                    else if (raiz instanceof NodoCall)
+                        {
+                             if(((NodoCall)raiz).getParametros()!=null) //vector
+                                System.out.println("Llamada a: "+((NodoCall)raiz).getIdentificador()+"("+((NodoCall)raiz).getParametros()+")");            
+                            else
+                                System.out.println("Llamada a: "+((NodoCall)raiz).getIdentificador());
+                        }
+                   else if (raiz instanceof NodoOperacion
 		    		|| raiz instanceof NodoValor
 		    		|| raiz instanceof NodoIdentificador )
 		    	imprimirNodo(raiz);
-		    else System.out.println("Tipo de nodo desconocido");;
+		    else System.out.println("Tipo de nodo desconocido");
 		    
-		    /* Hago el recorrido recursivo */
+		    
+                    /* Hago el recorrido recursivo */
+                    
+                    if  (raiz instanceof NodoEstructura){
+                        printSpaces();
+                        System.out.println("**Funcion**");
+                        imprimirAST(((NodoEstructura)raiz).getFuncion());
+                        printSpaces();
+                        System.out.println("**Main**");
+                        imprimirAST(((NodoEstructura)raiz).getBloque());
+                    }
+                    
+                    if (raiz instanceof NodoFuncionRetorna){
+                        printSpaces();
+                        System.out.println("**Funcion con Retorno**");
+                        imprimirAST(((NodoFuncionRetorna)raiz).getTipo());
+                        
+                        printSpaces();
+                        System.out.println("ID, "+((NodoFuncionRetorna)raiz).getIdentificador());
+                       
+                        
+                        
+                        if(((NodoFuncionRetorna)raiz).getParametros()!=null){
+                            printSpaces();
+                            System.out.println("parametros");
+                            imprimirAST(((NodoFuncionRetorna)raiz).getParametros());
+                        }
+                        printSpaces();
+                        System.out.println("cuerpo");
+                        imprimirAST(((NodoFuncionRetorna)raiz).getSecuencias());
+                        
+                        printSpaces();
+                        System.out.println("retorno");
+                        imprimirAST(((NodoFuncionRetorna)raiz).getExpresion());
+                        
+                        
+                    }
+                    else if (raiz instanceof NodoFuncionSinRetorna){
+                        printSpaces();
+                        System.out.println("**Funcion sin Retorno**");
+                        System.out.println("VOID");
+                        
+                        if(((NodoFuncionSinRetorna)raiz).getParametros()!=null){
+                            printSpaces();
+                            System.out.println("parametros");
+                            imprimirAST(((NodoFuncionSinRetorna)raiz).getParametros());
+                        }
+                        printSpaces();
+                        System.out.println("cuerpo");
+                        imprimirAST(((NodoFuncionSinRetorna)raiz).getSecuencias());
+                        
+                    }
+                    
 		    if (raiz instanceof  NodoIf){
 		    	printSpaces();
 		    	System.out.println("**Prueba IF**");
@@ -104,7 +177,7 @@ static void imprimirNodo( NodoBase raiz )
 	}
 
 	if(	raiz instanceof NodoValor ){
-		System.out.println("NUM, val= "+ ((NodoValor)raiz).getValor());
+		System.out.println("NUM, val= "+ ((NodoValor)raiz).getVint());
 	}
 
 	if(	raiz instanceof NodoIdentificador ){

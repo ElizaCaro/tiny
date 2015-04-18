@@ -1,6 +1,5 @@
 int myfunc(int a,boolean b)
 begin
-	write x;
 	return (a+b);
 end;
 
@@ -16,16 +15,15 @@ begin
 	    	x := x - 1;
 	  	until x = 0;
 	end;
-	return x;
 end;
 
 void myproc()
 begin
 	int a[10];
-	for(x:=1;x<10;x:=x+1)
+	for(x=1;x<10;x=x+1)
 		a[x]:=x;
 		if x>=7 and x<10 then
-			write jodete;
+			return;
 		end;
 	end;
 end;
@@ -55,6 +53,5 @@ begin
 
 	b[1-1]:=2-2+(-1);
 	c:=-1;
-	
 
 end;
