@@ -31,26 +31,9 @@ begin
 end;
 
 begin 
-	int a,b[1],c;
-	a:=1;
-	c:=a*a+3;
-	boolean d,e,g[3];
-	d:=true;
-	
+	x:= myproc(p,e);
 
-	read a;
-	
-	write a/1;
-	write b[0];
-	
-
-	a:=(2+1)*4+(3/(3+1));
-	a:=c[9];
-
-	b[1]:=2-(-2);
-	int x;
-	x:=1;
-	
+	b:= a+factorial();
 	
 
 end;

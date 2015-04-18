@@ -2,24 +2,24 @@ package ast;
 
 public class NodoCall extends NodoBase{
     private String identificador;
-    private NodoBase parametros;
+    private NodoBase argumentos;
 
     
     public NodoCall(String identificador) {
         super();
         this.identificador = identificador;
-        this.parametros = null;
+        this.argumentos = null;
     }
     
-    public NodoCall(String identificador, NodoBase parametros) {
+    public NodoCall(String identificador, NodoBase argumentos) {
         super();
         this.identificador = identificador;
-        this.parametros = parametros;
+        this.argumentos = argumentos;
     }
 
     public NodoCall() {
         this.identificador = null;
-        this.parametros = null;
+        this.argumentos = null;
     }
 
     public String getIdentificador() {
@@ -30,12 +30,12 @@ public class NodoCall extends NodoBase{
         this.identificador = identificador;
     }
 
-    public NodoBase getParametros() {
-        return parametros;
+    public NodoBase getArgumentos() {
+        return argumentos;
     }
 
-    public void setParametros(NodoBase parametros) {
-        this.parametros = parametros;
+    public void setArgumentos(NodoBase argumentos) {
+        this.argumentos = argumentos;
     }
     
 
