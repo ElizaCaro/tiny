@@ -34,7 +34,7 @@ import java_cup.runtime.*;
 
 
 digito		= [0-9]
-numero		= {digito}+
+numero		= -?{digito}+
 bol 		= true | false
 letra			= [a-zA-Z]
 identificador	= {letra}+

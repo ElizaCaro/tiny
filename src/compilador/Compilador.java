@@ -1,18 +1,23 @@
 package compilador;
 
 import ast.*;
+import java.io.Console;
+
+
 import java_cup.runtime.*;
+
 
 public class Compilador {
 	
 	/***********
-	SymbolFactory es una nueva caracteristica que ha sido añadida a las version 11a de cup, la cual facilita la implementacion de clases Symbol personalizadas
-	, esto debido a que dicha clase no provee mucha información de contexto que podria ser util para el analisis semantico o ayudar en la construccion del AST
+	SymbolFactory es una nueva caracteristica que ha sido aï¿½adida a las version 11a de cup, la cual facilita la implementacion de clases Symbol personalizadas
+	, esto debido a que dicha clase no provee mucha informaciï¿½n de contexto que podria ser util para el analisis semantico o ayudar en la construccion del AST
 	Mas informacion en: http//4thmouse.com/index.php/2007/02/15/using-custom-symbols-in-cup/
 	***********/
-
-	public static void main(String[] args) throws Exception {
-		@SuppressWarnings("deprecation")
+    
+       	public static void main(String[] args) throws Exception {
+                
+                @SuppressWarnings("deprecation")
 		SymbolFactory sf = new DefaultSymbolFactory();
 		parser parser_obj;
 		if (args.length==0) 
@@ -29,9 +34,15 @@ public class Compilador {
 		System.out.println();
 		ast.Util.imprimirAST(root);
 		TablaSimbolos ts = new TablaSimbolos();
-		ts.cargarTabla(root);
-		ts.ImprimirClaves();
-	    //REALIZAR ACA ANALISIS SEMANTICO
+		System.out.println("\t\t\t     **TABLA DE SIMBOLOS**\n");
+                System.out.println("\tTIPO\t\tIDENTIFICADOR\t\tAMBITO\tDIRECCION\n");
+                ts.cargarTabla(root);
+               
+		//ts.ImprimirClaves();
+	        //REALIZAR ACA ANALISIS SEMANTICO
+                    Semantico se = new Semantico(ts);
+                    se.recorrerArbol(root);
+                //
 		Generador.setTablaSimbolos(ts);
 		Generador.generarCodigoObjeto(root);
 	}

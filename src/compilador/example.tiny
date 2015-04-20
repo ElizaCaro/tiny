@@ -1,31 +1,33 @@
 int MYFUNCION(int a,boolean b)
 begin
-	write x;
-	return (lufi+fasab);
+        int x;
+        boolean y;
+	return x;
 end;
 
 boolean FACTORIAL()
 begin
 	read xxxxpppp;
-	int fact,b,c,f,r,g[8];
-	fact:=0;
-	if 0 < x then
+	int fact,x,b,c,f,r,g[8];
+        boolean w;
+		if 0 < x then
 		fact := 1;
 	  	repeat
 	    	fact := fact * x;
 	    	x := x - 1;
-	  	until x = 0;
+	  	until x = b;
 	end;
-	return eliazabe;
+        boolean a;
+        a:=true;
+	return a;
 end;
 
-void MYPROCESO()
+void MYPROCESO(int raidy)
 begin
 	int a[10];
 	for(xxx:=uuuu; yyy<10; zzz:=x+1)
-		a[8]:=qqqqqqq;
 		if xif>=7 and xiif<10 then
-			write jodete;
+			a[8]:=qqqqqqq;
 		end;
 	end;
 end;
@@ -34,21 +36,22 @@ int funcionprueba()
 begin
 	repeat
 		myproc();
+                int LUIGY,i,;
                 LUIGY := factorial(parametrosA,Pararemee);
-		for (iiiiii:=0;i>=10;i:=i+1)
+		for (i:=0;i>=10;i:=i+1)
 			if i =2 then
 				write e;
 			else
-                            int aaaaaaa;
+                            int a;
                             read jsojdaojsofas;
 			end;
 		end;
 	until i=15;
-	return pruebaejemplo;
+	return a ;
 end;
 
 begin
-	
+	int x,a,b;
 	x:= myproc(p,e);
 	b:= a+factorial();
 

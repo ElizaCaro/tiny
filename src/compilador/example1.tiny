@@ -1,26 +1,44 @@
-int ambitoA()
-	begin
-		int x,comun;
-		x := 0;
-		return x;
-	end;	
-
-boolean ambitoB()
-	begin
-		boolean y,B,H,JJ,U;
-		y := 0;
-		int comun;
-		return y;
-	end;	
-
-void ambitoC()
+void myfun()
 begin
-    int A;
-    int comun;
+    int a,b,c,d;
+    a:=b+3;
+    d:=1+3*2+6/(c+d);
+end;
+
+int funcion(int z, boolean w)
+begin
+    int d;
+    d:=10;
+    return (1+3*2+6/(z+d));
+end;
+
+boolean ejemplo(boolean c)
+begin
+    int x,f[3];
+    x:=12;
+    return c;
 end;
 
 begin
-		int z;
-		z := 0;
-		int comun;
+    boolean c;
+    int x,i,d,aa;
+    c:=true;
+    if x > 10
+    then
+        c:= false;
+        x:= 10;
+    end;
+
+    repeat
+        x:=1;
+        d:=1+3*2+6/(i+d);
+        for(aa:=1 ; c = true ;aa:=aa+1)
+            read x;
+        end;
+    until 4>5;
+
+    d:= funcion();
+    read d; 
+    write c; 
+
 end;

@@ -121,6 +121,7 @@ public class Util {
                     
                     if (raiz instanceof NodoCall){
                         printSpaces();
+                        if(((NodoCall)raiz).getArgumentos()!=null)
                         System.out.println("**argumentos**");
                         imprimirAST(((NodoCall)raiz).getArgumentos());
                     }

@@ -106,71 +106,568 @@ precedence left RPAREN;
 
 
 /* REGLAS GRAMATICALES */
-raiz		::= program:p{::};
-program		::= funciones:f bloque:b {::};
-bloque 		::= BEGIN stmt_seq END SEMI {::};
-stmt_seq	::= stmt_seq:s stmt:se SEMI | stmt:s SEMI;
-stmt        ::= 
-			if_stmt:sif	{::}
-			|repeat_stmt:srep	{::}
-			| assign_stmt:sasi	{::}
-            | read_stmt:slec	{::}
-            | write_stmt:sesc	{::}
-            | decl_var:sdec 	{::}
-            | for_stmt:sfor		{::}
-            | call_funciones:scall {::}
-            | error {::}
-            ;
 
-if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END {::}
-			  | IF exp:ex THEN stmt_seq:pthen ELSE stmt_seq:pelse END{::};
-repeat_stmt ::= REPEAT stmt_seq:cuerpo UNTIL exp:prueba	{::};
-assign_stmt ::= ID:variable {::} ASSIGN exp:ex {::} 
-				|ID:variable LCORCHE NUM RCORCHE ASSIGN exp:ex {::} ;
-read_stmt   ::= READ exp:ex{::};
-write_stmt  ::= WRITE exp:ex {::};
-for_stmt 	::= FOR LPAREN assign_stmt:a SEMI exp:e SEMI assign_stmt:aa RPAREN stmt_seq:sq END{::};
-tipo 		::= INT|BOOLEAN;
-funciones 	::= funciones:f funcion:fu {::} | funcion:f {::};
-funcion 	::= f_Retorna:fr {::} | f_SinRetorno:fsr {::};
-f_Retorna 	::= tipo:t ID LPAREN RPAREN BEGIN stmt_seq RETURN exp:ex SEMI END SEMI{::} 
-				|tipo:t ID LPAREN parametros:p RPAREN BEGIN stmt_seq RETURN exp:ex SEMI END SEMI{::}
-				;
-f_SinRetorno ::= VOID ID LPAREN RPAREN bloque:b {::}
-				|VOID ID LPAREN parametros:p RPAREN bloque:b {::}
-				;
+raiz		::= program:p
+	{:
+		if(modoDepuracion) 
+			System.out.println("\t Regla 1");
+		ast = p;
+	:};
 
-parametros 	::= parametros:pa COMA parametro:p {::} | parametro:p {::};
-parametro 	::= tipo:t ID {::};
+program		::= funciones:f bloque:b 
+	{:
+		if(modoDepuracion) 
+			System.out.println("\t Regla 2");
+		RESULT = new NodoEstructura(f,b);
+	:}
+				|error
+	{:
+			System.err.println(" *************** Error No Hay Cuerpo Principal ****************");
+			System.exit(0);
+	:};
 
-call_funciones ::= ID:variable LPAREN RPAREN{::} 
-				  |ID:variable LPAREN argumentos:a RPAREN{::};
-argumentos 	::= argumentos:a COMA exp:e{::} | exp:e{::};
 
-decl_var	::= tipo:t lista_var:l {::} | tipo:t assign_stmt:a {::} ;
-lista_var	::= var:v COMA lista_var:l {::} | var:v{::};
-var 		::= ID {::} | ID LCORCHE NUM RCORCHE {::};
-exp 		::= exp:e OR exp_and:ea {::}| exp_and:ea {::};
-exp_and 	::= exp_and:ea AND exp_rel:er {::} | exp_rel:er{::};
-exp_rel     ::= simple_exp:exI LT simple_exp:exD {::}
-				|simple_exp:exI GT simple_exp:exD {::}
-				|simple_exp:exI LE simple_exp:exD {::}
-				|simple_exp:exI GE simple_exp:exD {::}
-				|simple_exp:exI NE simple_exp:exD {::}
-				|simple_exp:exI EQ simple_exp:exD {::}
-				|simple_exp:exI{::};
+bloque 		::= BEGIN stmt_seq:s END SEMI 
+	{:
+		if(modoDepuracion) 
+			System.out.println("\t regla 3");
+		RESULT = s;
+	:};
 
-simple_exp  ::= simple_exp:exI PLUS term:t{::}
-				|simple_exp:exI MINUS term:t{::}
-				|term:t{::};
+stmt_seq	::= stmt_seq:s stmt:se SEMI 
+	{:
+		if(modoDepuracion) 
+			System.out.println("\t regla 4A");
 
-term        ::= term:t TIMES factor:fa{::}
-				|term:t OVER factor:fa{::}
-				|factor:fa{::};
+		NodoBase hijoActual = s;
+		if(hijoActual!=null){
+			while(hijoActual.TieneHermano())
+			{
+				hijoActual = hijoActual.getHermanoDerecha();
+			}
+			hijoActual.setHermanoDerecha(se);
+			RESULT = s;
+		}else{
+			RESULT = se;
+		}
+			
+	:}
+				|stmt:s SEMI
+	{:
+		if(modoDepuracion) 
+			System.out.println("\t regla 4B");
+		RESULT = s;
+	:};
 
-factor		::= LPAREN exp:ex RPAREN{::}
-				|NUM:variable{::} 
-				|ID:variable{::}
-				|ID:variable LCORCHE NUM RCORCHE{::}
-				|BOL:variable{::}
-				|call_funciones:c{::};
+stmt        ::=	if_stmt:sif	
+	{:
+		if(modoDepuracion) 
+			System.out.println("\t Regla 5A");
+		RESULT=sif; 
+	:}
+			|repeat_stmt:srep 
+	{: 
+		if(modoDepuracion) 
+			System.out.println("\t Regla 5B");
+		RESULT=srep; 
+	:}
+			|assign_stmt:sasi 
+	{: 
+		if(modoDepuracion) 
+			System.out.println("\t Regla 5C"); 
+		RESULT=sasi; 
+	:}
+            |read_stmt:slec	
+     {: 
+     	if(modoDepuracion) 
+     		System.out.println("\t Regla 5D"); 
+     	RESULT=slec; 
+     :}
+            |write_stmt:sesc 
+     {: 
+     	if(modoDepuracion) 
+     		System.out.println("\t Regla 5E"); 
+     	RESULT=sesc; 
+     :}
+            |decl_var:sdec 
+    {: 
+    	if(modoDepuracion) 
+    		System.out.println("\t Regla 5F"); 
+    	RESULT=sdec; 
+    :}
+            |for_stmt:sfor 
+    {: 
+    	if(modoDepuracion) 
+    		System.out.println("\t Regla 5G"); 
+    	RESULT=sfor; 
+    :}
+            |call_funciones:scall 
+    {:
+    	if(modoDepuracion) 
+    		System.out.println("\t Regla 5H"); 
+    	RESULT=scall;
+   	:}
+            |error 
+    {:
+    	if(modoDepuracion) 
+    		System.out.println("Regla 5J error del cup #0004"); 
+    	System.err.println("******* Declaracion No Valida *******");
+    	System.exit(0);
+    	RESULT=null;
+    :};
+
+if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 6A"); 
+    	RESULT = new NodoIf(ex,pthen);
+	:}
+			  | IF exp:ex THEN stmt_seq:pthen ELSE stmt_seq:pelse END
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 6B"); 
+    	RESULT = new NodoIf(ex,pthen,pelse);
+	:};
+
+
+repeat_stmt ::= REPEAT stmt_seq:cuerpo UNTIL exp:prueba	
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 7"); 
+    	RESULT = new NodoRepeat(cuerpo,prueba);
+	:};
+
+
+assign_stmt ::= ID:variable {::} ASSIGN exp:ex 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 8A"); 
+    	
+		if(variable!=null)
+			RESULT = new NodoAsignacion(variable.toString(),ex);
+		else
+			RESULT=null;
+	:} 
+				|ID:variable LCORCHE NUM:n RCORCHE ASSIGN exp:ex 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 8B"); 
+    	
+		if(variable!=null)
+			RESULT = new NodoAsignacion(variable.toString(),n,ex); // asignacion a vector
+		else
+			RESULT=null;
+	:} ;
+
+
+read_stmt   ::= READ ID:variable
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 9"); 
+    	
+		if(variable!=null)
+			RESULT = new NodoLeer(variable.toString());
+		else
+			RESULT = null;
+	:};
+
+write_stmt  ::= WRITE exp:ex 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 10"); 
+    	RESULT = new NodoEscribir(ex);
+	:};
+
+for_stmt 	::= FOR LPAREN assign_stmt:a SEMI exp:e SEMI assign_stmt:aa RPAREN stmt_seq:sq END
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 11"); 
+    	
+		if(a!= null && e!=null && aa!=null)
+			RESULT = new NodoFor(a,e,aa,sq);
+		else
+			RESULT = null;
+	:};
+
+tipo 		::= INT
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 12A"); 
+    	RESULT = new NodoIdentificador("INT");
+    :}
+				|BOOLEAN
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 12B"); 
+    	RESULT = new NodoIdentificador("BOOLEAN");
+   	:};
+
+funciones 	::= funciones:f funcion:fu 
+	{:
+	 	if(modoDepuracion) 
+			System.out.println("\t regla 13A");
+		
+		NodoBase hijoActual = f;
+		if(hijoActual!=null){
+			while(hijoActual.TieneHermano())
+			{
+				hijoActual = hijoActual.getHermanoDerecha();
+			}
+			hijoActual.setHermanoDerecha(fu);
+			RESULT = f;
+		}else{
+			RESULT = fu;
+		}
+
+	:} 
+				|funcion:f 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 13B"); 
+    	RESULT= f;
+	:}
+			| error 
+	{:
+		System.err.println("******Error De Declaracion o Uso de Funcion*******"); 
+		System.exit(0);
+	:};
+
+funcion 	::= f_Retorna:fr 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 14A"); 
+    	RESULT = fr;    	
+	:} 
+				|f_SinRetorno:fsr 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 14B"); 
+    	RESULT=fsr;
+	:};
+
+
+f_Retorna 	::= tipo:t ID:variable LPAREN RPAREN BEGIN stmt_seq:s RETURN:r exp:ex SEMI END SEMI
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 15A"); 
+
+    		RESULT = new NodoFuncionRetorna(t,s,ex,variable.toString());
+    	
+	:} 
+				|tipo:t ID:variable LPAREN parametros:p RPAREN BEGIN stmt_seq:s RETURN exp:ex SEMI END SEMI
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 15B"); 
+    	RESULT = new NodoFuncionRetorna(t,p,s,ex,variable.toString());
+	:};
+
+f_SinRetorno ::= VOID ID:variable LPAREN RPAREN bloque:b 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 16A"); 
+    	RESULT = new NodoFuncionSinRetorna(b,variable.toString());	
+	:}
+				|VOID ID:variable LPAREN parametros:p RPAREN bloque:b 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 16B"); 
+    	RESULT = new NodoFuncionSinRetorna(p,b,variable.toString());
+	:};
+
+parametros 	::= parametros:pa COMA parametro:p 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 17A");
+    	NodoBase hijoActual = pa;
+    	if(hijoActual!=null)
+    	{
+    		while(hijoActual.TieneHermano()){
+    			hijoActual = hijoActual.getHermanoDerecha();
+    		}
+    		hijoActual.setHermanoDerecha(p);
+    		RESULT = pa;
+    	}else{
+    		RESULT = p;
+    	}
+	:} 
+				|parametro:p 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 17B"); 
+    	RESULT = p;
+	:};
+
+parametro 	::= tipo:t ID:variable 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 17B"); 
+    	if(variable!=null)
+    		RESULT = new NodoParametro(variable.toString(),t);
+    	else
+    		RESULT = null;
+	:};
+
+call_funciones ::= ID:variable LPAREN RPAREN
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 18A"); 
+
+    	if(variable!=null)
+			RESULT = new NodoCall(variable.toString());
+		else
+			RESULT = null;
+	:} 
+				  |ID:variable LPAREN argumentos:a RPAREN
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 18B"); 
+
+    	if(variable!=null)
+			RESULT = new NodoCall(variable.toString(),a);
+		else
+			RESULT = null;
+	:};
+
+argumentos 	::= argumentos:a COMA exp:e
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 19A"); 
+
+    	NodoBase hijoActual = a;
+    	if(hijoActual!=null){
+    		while(hijoActual.TieneHermano()){
+    			hijoActual = hijoActual.getHermanoDerecha();
+    		}	
+    		hijoActual.setHermanoDerecha(e);
+    		RESULT = a;
+    	}else
+    		RESULT =e;
+    :} 
+				|exp:e
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 19B"); 
+    	RESULT = e;
+	:};
+
+decl_var	::= tipo:t lista_var:l 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 20A"); 
+    	RESULT = new NodoDeclaracion(t,l);
+	:};
+
+
+
+lista_var	::= lista_var:l COMA  var:v 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 21A");
+    	
+		NodoBase hijoActual = l;
+		if(hijoActual != null){
+			while(hijoActual.TieneHermano()){
+				hijoActual = hijoActual.getHermanoDerecha();
+			}
+			hijoActual.setHermanoDerecha(v);
+			RESULT = l;
+		}else{
+			RESULT = v;
+		}
+	:} 
+			|var:v
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 21B");
+    	RESULT = v;
+	:};
+
+var 		::= ID:variable 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 22A");
+
+    	RESULT = new NodoVariable(variable.toString());
+	
+	:}  
+				|ID:variable LCORCHE NUM:n RCORCHE 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 22B");
+    	RESULT = new NodoVariable(variable.toString(), n);
+	
+	:};
+
+exp 		::= exp:e OR exp_and:ea 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 23A");
+		RESULT = new NodoOperacion(e,tipoOp.or,ea);
+	:}	
+					| exp_and:ea 
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 23B");
+		RESULT = ea;
+	:};
+
+exp_and 	::= exp_and:ea AND exp_rel:er 
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 24A");
+    	RESULT = new NodoOperacion(ea,tipoOp.and,er);
+	:} 
+					| exp_rel:er
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 24B");
+    	RESULT = er;
+	:};
+	
+exp_rel     ::= simple_exp:exI LT simple_exp:exD 
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 25A");
+    	RESULT = new NodoOperacion(exI,tipoOp.menor,exD);
+
+	:}
+				|simple_exp:exI GT simple_exp:exD 
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 25B");
+    	RESULT = new NodoOperacion(exI,tipoOp.mayor,exD);
+	:}
+				|simple_exp:exI LE simple_exp:exD 
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 25C");
+    	RESULT = new NodoOperacion(exI,tipoOp.menorigual,exD);
+	:}
+				|simple_exp:exI GE simple_exp:exD 
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 25D");
+    	RESULT = new NodoOperacion(exI,tipoOp.mayorigual,exD);
+	:}
+				|simple_exp:exI NE simple_exp:exD
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 25E");
+		RESULT = new NodoOperacion(exI,tipoOp.diferente,exD);
+	:}
+				|simple_exp:exI EQ simple_exp:exD 
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 25F");
+    	RESULT = new NodoOperacion(exI,tipoOp.igual,exD);
+	:}
+				|simple_exp:ex
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 25G");
+    	RESULT = ex;
+	:};
+
+simple_exp  ::= simple_exp:exI PLUS term:t
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 26A");
+    	RESULT = new NodoOperacion(exI,tipoOp.mas,t);
+	:}
+				|simple_exp:exI MINUS term:t
+	{:
+		
+		if(modoDepuracion) 
+    		System.out.println("Regla 26B");
+		RESULT = new NodoOperacion(exI,tipoOp.menos,t);
+	:}
+				|term:t
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 26C");
+    	RESULT = t;
+	:};
+
+term        ::= term:t TIMES factor:fa
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 27A");
+    	RESULT = new NodoOperacion(t,tipoOp.por,fa);
+	:}
+				|term:t OVER factor:fa
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 27B");
+    	RESULT = new NodoOperacion(t,tipoOp.entre,fa);
+	:}
+				|factor:fa
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 27C");
+    	RESULT = fa;
+	:};
+
+factor		::= LPAREN exp:ex RPAREN
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 28A");
+    	RESULT = ex;
+	:}
+				|NUM:valor
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 28B");
+
+		if(valor!=null){
+			RESULT = new NodoValor(valor);
+		}else{
+			RESULT = null;	
+		}
+		
+	:}
+				|ID:variable
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 28C");
+		if(variable!=null){
+			RESULT = new NodoIdentificador(variable.toString());
+		}else{
+			RESULT = null;
+		}
+	:}
+				|ID:variable LCORCHE NUM:valor RCORCHE
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 28D");
+    	RESULT = new NodoIdentificador(variable.toString(),valor);
+	:}
+				|BOL:valor
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 28E");
+		if(valor!=null){
+			RESULT = new NodoValor(valor);
+		}else{
+			RESULT = null;
+		}
+	:}
+				|call_funciones:c
+	{:
+		if(modoDepuracion) 
+    		System.out.println("Regla 28F");
+		RESULT = c;
+	:}			
+				| error
+	{:
+		System.err.println("********* Expresion No Declarada **************");
+		System.exit(0);
+	:};
