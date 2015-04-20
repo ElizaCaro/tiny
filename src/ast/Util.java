@@ -168,11 +168,18 @@ public class Util {
                         imprimirAST(((NodoFor)raiz).getCuerpo());
                     
                     }
-		    else if (raiz instanceof  NodoAsignacion)
+		    else 
+                        
+                    if (raiz instanceof  NodoAsignacion)
 		    	imprimirAST(((NodoAsignacion)raiz).getExpresion());
-		    else if (raiz instanceof  NodoEscribir)
+		    else 
+                        
+                    if (raiz instanceof  NodoEscribir)
 		    	imprimirAST(((NodoEscribir)raiz).getExpresion());
-		    else if (raiz instanceof NodoOperacion){
+		    else 
+                        
+                    
+                    if (raiz instanceof NodoOperacion){
 		    	printSpaces();
 		    	System.out.println("**Expr Izquierda Operacion**");
 		    	imprimirAST(((NodoOperacion)raiz).getOpIzquierdo());
@@ -218,10 +225,26 @@ static void imprimirNodo( NodoBase raiz )
 			System.out.println("*");
 		if(sel==tipoOp.entre)
 			System.out.println("/");
+                if(sel==tipoOp.mayor)
+			System.out.println(">");
+                if(sel==tipoOp.mayorigual)
+			System.out.println(">=");
+                if(sel==tipoOp.menorigual)
+			System.out.println("<=");
+                if(sel==tipoOp.diferente)
+			System.out.println("!=");
+                if(sel==tipoOp.and)
+			System.out.println("AND");
+                if(sel==tipoOp.or)
+			System.out.println("OR");
+                
 	}
 
 	if(	raiz instanceof NodoValor ){
-		System.out.println("NUM, val= "+ ((NodoValor)raiz).getVint());
+            if(((NodoValor)raiz).getVint() != null)
+                System.out.println("NUM, val= "+ ((NodoValor)raiz).getVint());
+            if(((NodoValor)raiz).isVbol()!= null)
+                System.out.println("BOL, val= "+ ((NodoValor)raiz).isVbol());
 	}
 
 	if(	raiz instanceof NodoIdentificador ){

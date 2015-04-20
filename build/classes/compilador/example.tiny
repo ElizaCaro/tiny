@@ -1,12 +1,12 @@
-int myfunc(int a,boolean b)
+int MYFUNCION(int a,boolean b)
 begin
 	write x;
-	return (a+b);
+	return (lufi+fasab);
 end;
 
-boolean factorial()
+boolean FACTORIAL()
 begin
-	read x;
+	read xxxxpppp;
 	int fact,b,c,f,r,g[8];
 	fact:=0;
 	if 0 < x then
@@ -16,24 +16,60 @@ begin
 	    	x := x - 1;
 	  	until x = 0;
 	end;
-	return x;
+	return eliazabe;
 end;
 
-void myproc()
+void MYPROCESO()
 begin
 	int a[10];
-	for(x:=1;x<10;x:=x+1)
-		a[8]:=x;
-		if x>=7 and x<10 then
+	for(xxx:=uuuu; yyy<10; zzz:=x+1)
+		a[8]:=qqqqqqq;
+		if xif>=7 and xiif<10 then
 			write jodete;
 		end;
 	end;
 end;
 
-begin 
-	x:= myproc(p,e);
+int funcionprueba()
+begin
+	repeat
+		myproc();
+                LUIGY := factorial(parametrosA,Pararemee);
+		for (iiiiii:=0;i>=10;i:=i+1)
+			if i =2 then
+				write e;
+			else
+                            int aaaaaaa;
+                            read jsojdaojsofas;
+			end;
+		end;
+	until i=15;
+	return pruebaejemplo;
+end;
 
-	b:= a+factorial();
+begin
 	
+	x:= myproc(p,e);
+	b:= a+factorial();
 
+		
+	if x!=10 or x!=20 then
+		write xqqqqqqq;
+	else
+		x:=0;
+	end;
+
+	a:=(1+3)*20/(3+2);
+	b[8]:=factorial()+20;
+	int e,g[20],z,r;
+
+	for (f:=0; f>=20;f:=f+2)
+		repeat
+			if f>=20 and f<5 then
+				a:= funcionprueba()+1;
+			else
+				myfunc(k,t);
+			end;
+		until f!=0;
+	end;
 end;
