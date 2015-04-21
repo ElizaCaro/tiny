@@ -199,17 +199,31 @@ public class TablaSimbolos {
 	 * 1. Crear lista con las lineas de codigo donde la variable es usada.
 	 * */
 
-    public boolean getParametros(int ambito,String tipoCompara, int p) {
-        String aux = "";
-        System.out.println("Ambito: "+ambito+" Com: "+tipoCompara);
+    public int tamano(int amb){
+        int tam = 0;
+        for(String s: tabla.keySet()){
+            if(BuscarSimbolo(s).getAmbito() == amb && BuscarSimbolo(s).getClasificacion()=="PFUN")
+                tam++;
+        }
+        return tam;
+    }    
         
+        
+    public int getParametros(int ambito,String tipoCompara, int p) {
+        String aux = "";
+       // System.out.println("Ambito: "+ambito+" Com: "+tipoCompara+" pos: "+p);
+        
+        int i = 0;
         
             for (String s : tabla.keySet()) {
                 if( BuscarSimbolo(s).getAmbito() == ambito && "PFUN".equals(BuscarSimbolo(s).getClasificacion()) && BuscarSimbolo(s).getTipo().equals(tipoCompara) && BuscarSimbolo(s).getPos_Parametro() == p){
-                    System.out.println(BuscarSimbolo(s).getIdentificador()+" pos: "+BuscarSimbolo(s).getPos_Parametro());
-                    return true;
+                    /*System.out.println("BuscarSimbolo(s).getAmbito() "+BuscarSimbolo(s).getAmbito());
+                    System.out.println("\"PFUN\".equals(BuscarSimbolo(s).getClasificacion(): "+BuscarSimbolo(s).getClasificacion());
+                    System.out.println("BuscarSimbolo(s).getTipo().equals(tipoCompara): "+BuscarSimbolo(s).getTipo());
+                    System.out.println("BuscarSimbolo(s).getPos_Parametro(): "+BuscarSimbolo(s).getPos_Parametro());*/
+                    i++;
                 }
             }
-        return false;
+        return i;
     }
 }

@@ -1,0 +1,2 @@
+paso de parametros para la llamada de funcion no acepta numero, true, false, y otras funciones
+return exclusivo al final de la funcion

@@ -21,6 +21,8 @@ public class Semantico {
     boolean Correcto = false;
     int ambitoAux = 0;
     int pos = 0;
+    int cant = 0;
+    int comp = 0;
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Constructor">
@@ -91,9 +93,11 @@ public void recorrerArbol(NodoBase raiz){
                 
                 if (BandCall == true){
                     pos++;
-                    Correcto = tablaSimbolos.getParametros(ambitoAux,tipoCompara,pos) == true;
+                    cant++;
+                    comp+= tablaSimbolos.getParametros(ambitoAux,tipoCompara,pos);
                 }else{
-                    Correcto = false;
+                    comp = 0;
+                    pos = 0;
                     BandCall = false;
                     
                     if("BOOLEAN".equals(tipoCompara))
@@ -138,18 +142,13 @@ public void recorrerArbol(NodoBase raiz){
                 String t = tablaSimbolos.BuscarSimbolo(temporal+" "+ambito).getTipo();
                 recorrerArbol(((NodoAsignacion)raiz).getExpresion());
                 
-                if("INT".equals(t) && bandNumero == false){
-                    System.err.println("******* Datos no compatible **********");
-                    System.err.println("******* Error de Asignación *********");
-                    System.exit(0);
-                }
-
-                if("BOOLEAN".equals(t) && bandBoleam == false){
-                    System.err.println("******* Datos no compatible **********");
-                    System.err.println("******* Error de Asignación *********");
-                    System.exit(0);
-                }
-
+                
+                    if(t != tipoCompara){
+                        System.err.println("******* Datos no compatible **********");
+                        System.err.println("******* Error de Asignación *********");
+                        System.exit(0);
+                    
+                    }
                 BandAsig = false;
                 bandNumero = false;
                 bandBoleam = false;
@@ -298,29 +297,122 @@ public void recorrerArbol(NodoBase raiz){
         else
         //<editor-fold defaultstate="collapsed" desc="NodoCall">
         if  (raiz instanceof NodoCall){
-
-            BandCall = true;
-            String id = ((NodoCall)raiz).getIdentificador();
-
-            for (int i = 1; i < ambito+1; i++) {
-                System.out.println("ID sdasdasdasdasd: "+id+" "+i);
-                if (tablaSimbolos.BuscarSimbolo(id+" "+i) != null){
-                    tipoCompara = tablaSimbolos.BuscarSimbolo(id+" "+i).getTipo();
-                    ambitoAux = i;
-                    recorrerArbol(((NodoCall)raiz).getArgumentos());
-
-                    if(Correcto == false){
-                        System.err.println("Parametros de la Funcion Mal Definidos");
-                        System.exit(0);
-                    }else{
-                        tipoCompara = "";
-                        BandCall = false;
+            
+            //<editor-fold defaultstate="collapsed" desc="BandCall false">
+            if(BandAsig == false){
+                // Si BandCall false llamo procedimiento
+                
+                boolean band = false;
+                String id = ((NodoCall)raiz).getIdentificador();
+                for (int i = 1; i < ambito+1; i++) {
+                    if (tablaSimbolos.BuscarSimbolo(id+" "+i) != null){
+                        
+                        if(tablaSimbolos.BuscarSimbolo(id+" "+i).getTipo() == "VOID"){
+                            //verifica parametros
+                            int tam = tablaSimbolos.tamano(i);
+                            if(((NodoCall)raiz).getArgumentos() != null){
+                                BandCall = true;
+                                ambitoAux = i;
+                                recorrerArbol(((NodoCall)raiz).getArgumentos());
+                                
+                                if(comp != tam){
+                                    System.err.println("Parametros de la Funcion Mal Definidos");
+                                    System.exit(0);
+                                }else{
+                                    tipoCompara = "";
+                                    BandCall = false;
+                                }
+                            }
+                            
+                            if(tam != cant){
+                                System.err.println("Numero de parametros distintos");
+                                System.exit(0);
+                            }
+                            
+                            
+                        }else{
+                            System.err.println("Mal Uso de Funcion");
+                            System.exit(0);
+                        }
+                       
+                        band = true;
+                        break;
                     }
-
-                    break;
                 }
+                
+                if(band == false){
+                    System.err.println("Funcion No Declarada");
+                    System.exit(0);
+                }
+                
+                comp = 0;
             }
-
+         //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc="BandCall True">
+            else{
+             // Si BandCall es true llamo asignacion   
+                boolean band = false;
+                
+                String id = ((NodoCall)raiz).getIdentificador();
+                System.out.println("IDENTIFICADOR: "+id);
+                
+                for(int i = 0; i < ambito; i++){
+                    
+                    if(tablaSimbolos.BuscarSimbolo(id+" "+i)!=null){
+                        
+                        if(tablaSimbolos.BuscarSimbolo(id+" "+i).getTipo()=="INT" || tablaSimbolos.BuscarSimbolo(id+" "+i).getTipo()=="BOOLEAN"){
+                       
+                        int tam = tablaSimbolos.tamano(i);
+                       
+                            if(((NodoCall)raiz).getArgumentos() != null){
+                                BandCall = true;
+                                ambitoAux = i;
+                                
+                                System.out.println("comparador: "+comp+" tam: "+tam);
+                                
+                                recorrerArbol(((NodoCall)raiz).getArgumentos());
+                                
+                                System.out.println("comp: "+comp+" tam: "+tam);
+                                
+                                if(comp != tam){
+                                    System.err.println("Parametros de la Funcion Mal Definidos");
+                                    System.exit(0);
+                                }else{
+                                    tipoCompara = "";
+                                    BandCall = false;
+                                }
+                            }
+                        
+                            System.out.println("tam: "+tam+" cant: "+cant);
+                        if(tam != cant){
+                                System.err.println("Numero de parametros distintos");
+                                System.exit(0);
+                        }
+                            
+                            
+                        }else{
+                            System.err.println("Mal Uso de Funcion O Tipos Incompatibles");
+                            System.exit(0);
+                        } 
+                        
+                         tipoCompara = tablaSimbolos.BuscarSimbolo(id+" "+i).getTipo();
+                         band = true;   
+                         break;
+                    }
+                    
+                    
+                }//for
+                
+                if(band == false){
+                    System.err.println("Funcion No Declarada");
+                    System.exit(0);
+                }
+                  pos = 0;
+                  comp = 0;
+                  cant = 0;
+            }
+        //</editor-fold>
+            
         }
 
 //</editor-fold>

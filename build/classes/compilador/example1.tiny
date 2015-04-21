@@ -1,10 +1,10 @@
-void XXX()
+void XXX(int a, int b, boolean c)
 begin
     int var;
     var := (7*8+5)*(9/9*8);
 end;
 
-void myfun(int y)
+void myfun(int y,boolean cc)
 begin
     int a,b,c;
     boolean d,e,f;
@@ -59,14 +59,14 @@ end;
 
 
 
-int funcion(int z, boolean w)
+int entera(int z, boolean w)
 begin
     int d;
     d:=10;
     return z+d;
 end;
 
-boolean ejemplo(int a,boolean c)
+boolean buleana(int a,boolean c)
 begin
     int x,f[3];
     x:=12;
@@ -102,9 +102,7 @@ begin
         end;
     until x > i;
 
-    
-
-  
+XXX(x,entera(x,c),c);
 
 
 end;
