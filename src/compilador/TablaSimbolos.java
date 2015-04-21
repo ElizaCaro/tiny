@@ -8,6 +8,8 @@ public class TablaSimbolos {
 	private int direccion;  //Contador de las localidades de memoria asignadas a la tabla
 	private int ambito;
         private String tipo;
+        private String Clasificacion;
+        private int pos;
         
 	public TablaSimbolos() {
 		super();
@@ -15,6 +17,8 @@ public class TablaSimbolos {
 		direccion=0;
                 ambito = 0;
                 tipo = "";
+                Clasificacion = "";
+                pos = 0;
 	}
         
         public String BuscarTipo(NodoBase raiz){
@@ -28,7 +32,6 @@ public class TablaSimbolos {
             
             while (raiz != null) {
 	    if (raiz instanceof NodoIdentificador){
-               
                 InsertarSimbolo(((NodoIdentificador)raiz).getNombre(),-1);
 	    	//TODO: A�adir el numero de linea y localidad de memoria correcta
 	    }
@@ -44,31 +47,45 @@ public class TablaSimbolos {
             
             if  (raiz instanceof NodoFuncionRetorna){
                 ambito++;
-                
+                pos = 0;
                 tipo = BuscarTipo(((NodoFuncionRetorna)raiz).getTipo());
+                Clasificacion = "FUN";
                 InsertarSimbolo(((NodoFuncionRetorna)raiz).getIdentificador(), direccion);
                 
-                if(((NodoFuncionRetorna)raiz).getParametros()!=null)
+                if(((NodoFuncionRetorna)raiz).getParametros()!=null){
                     cargarTabla(((NodoFuncionRetorna)raiz).getParametros());
+                }
                 
+                Clasificacion = "VAR";
+                pos = 0;
                 cargarTabla(((NodoFuncionRetorna)raiz).getSecuencias());
                 cargarTabla(((NodoFuncionRetorna)raiz).getExpresion());
+                
             }else
             
             if  (raiz instanceof NodoFuncionSinRetorna){
                 ambito++;
+                pos = 0;
                 tipo = "VOID";
+                Clasificacion = "FUN";
                 InsertarSimbolo(((NodoFuncionSinRetorna)raiz).getIdentificador(), direccion);
                 tipo = "";
                 
-               if(((NodoFuncionSinRetorna)raiz).getParametros()!=null)
-                    cargarTabla(((NodoFuncionSinRetorna)raiz).getParametros());
                 
+               if(((NodoFuncionSinRetorna)raiz).getParametros()!=null){
+                   cargarTabla(((NodoFuncionSinRetorna)raiz).getParametros());
+                }
+                Clasificacion = "VAR";
+                pos = 0;
                 cargarTabla(((NodoFuncionSinRetorna)raiz).getSecuencias());
+               
             }else
             
             if  (raiz instanceof NodoParametro){
                 tipo = BuscarTipo(((NodoParametro)raiz).getTipo());
+                Clasificacion = "PFUN";
+                pos++;
+                
                 InsertarSimbolo(((NodoParametro)raiz).getIdentificador(), direccion);
             }else
             
@@ -141,13 +158,15 @@ public class TablaSimbolos {
 		        return false;
                     }else{
                     
-                        simbolo= new RegistroSimbolo(ident,numLinea,direccion++,ambito,tipo);
+                        simbolo= new RegistroSimbolo(ident,numLinea,direccion++,ambito,tipo, Clasificacion,pos);
 			tabla.put(identificador,simbolo);
                         
                         System.out.print("\t"+tipo);
                         System.out.print("\t\t"+ident);
                         System.out.print("\t\t\t"+ambito);
-                        System.out.println("\t\t"+direccion);
+                        System.out.print("\t\t"+direccion);
+                        System.out.print("\t\t"+Clasificacion);
+                        System.out.println("\t\t"+pos);
                         return true;		
                      }
                 }else
@@ -172,9 +191,27 @@ public class TablaSimbolos {
 	public int getDireccion(String Clave){
 		return BuscarSimbolo(Clave).getDireccionMemoria();
 	}
+        
+        
 	
 	/*
 	 * TODO:
 	 * 1. Crear lista con las lineas de codigo donde la variable es usada.
 	 * */
+
+    public boolean getParametros(int ambito,String tipoCompara, int p) {
+        String aux = "";
+        System.out.println("Ambito: "+ambito+" Com: "+tipoCompara);
+        
+        
+        for (Iterator <String>it = tabla.keySet().iterator(); it.hasNext();){
+            String s = (String)it.next();
+            
+            if( BuscarSimbolo(s).getAmbito() == ambito && "PFUN".equals(BuscarSimbolo(s).getClasificacion()) && BuscarSimbolo(s).getTipo() == tipoCompara && BuscarSimbolo(s).getPos_Parametro() == p){
+                System.out.println(BuscarSimbolo(s).getIdentificador()+" pos: "+BuscarSimbolo(s).getPos_Parametro());
+                return true;
+            }
+         }
+        return false;
+    }
 }

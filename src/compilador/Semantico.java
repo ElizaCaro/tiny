@@ -1,5 +1,6 @@
 package compilador;
 import ast.*;
+import java.util.Iterator;
 
 public class Semantico {
     private TablaSimbolos tablaSimbolos;
@@ -15,6 +16,11 @@ public class Semantico {
     boolean BandOperadores = false;
     boolean BandAsig = false;
     boolean BandRetorno = false;
+    boolean BandCall = false;
+    boolean Correcto = false;
+    int ambitoAux = 0;
+    int pos = 0;
+
     
     public Semantico(TablaSimbolos tablaSimbolos) {
         super();
@@ -80,36 +86,53 @@ public class Semantico {
             }else
                     
             
-                if (raiz instanceof NodoIdentificador){
-                String id = ((NodoIdentificador)raiz).getNombre();
-                  
+            if (raiz instanceof NodoIdentificador){
+            String id = ((NodoIdentificador)raiz).getNombre();
+            tipoCompara="";
+            
+            if(tablaSimbolos.BuscarSimbolo(id+" "+ambito) != null){
+               tipoCompara = tablaSimbolos.BuscarSimbolo(id+" "+ambito).getTipo();     
+
+               if (BandCall == true){
+                   pos++;
+                    if (tablaSimbolos.getParametros(ambitoAux,tipoCompara,pos) == true){
+                        Correcto = true;
+                    }else
+                        Correcto = false;
                 
-                tipoCompara=" ";
-                if(tablaSimbolos.BuscarSimbolo(id+" "+ambito) != null){
-                   tipoCompara = tablaSimbolos.BuscarSimbolo(id+" "+ambito).getTipo();     
-         
-                   if(tipoCompara == "BOOLEAN")
-                       bandBoleam = true;
-                   else
-                       bandNumero = true;
-                }
-                    //System.out.println("tipo: "+tipoCompara);
-                if("".equals(tipoCompara)){
-                    System.err.println("Identificador no Declarado: "+id);
-                    System.exit(0);
-                } 
+               }else{
+                   Correcto = false;
+                   BandCall = false;
+               }
+               
+               
+            if(BandCall == false)   
+               if(tipoCompara == "BOOLEAN")
+                   bandBoleam = true;
+               else
+                   bandNumero = true;
+            }
+                //System.out.println("tipo: "+tipoCompara);
+            if("".equals(tipoCompara)){
+                System.err.println("Identificador no Declarado: "+id);
+                System.exit(0);
+            } 
                 
             }else       
+            
             if (raiz instanceof NodoAsignacion){
+                
                 String temporal = ((NodoAsignacion)raiz).getIdentificador();
+                System.out.println("temporal: "+temporal);
                 
                 if(tablaSimbolos.BuscarSimbolo(temporal+" "+ambito) != null){
                     
                     BandAsig = true;
                     String t = tablaSimbolos.BuscarSimbolo(temporal+" "+ambito).getTipo();
-                    
                     recorrerArbol(((NodoAsignacion)raiz).getExpresion());                  
-                        
+                    
+                    
+                    
                         if("INT".equals(t) && bandNumero == false){
                                 System.err.println("******* Datos no compatible **********");
                                 System.err.println("******* Error de Asignación *********");
@@ -131,6 +154,7 @@ public class Semantico {
                     System.err.println("Error de Asignacion Variable no Declarada: "+temporal);
                     System.exit(0);
                 }
+                
             }else
                     
             if  (raiz instanceof NodoValor){
@@ -190,7 +214,6 @@ public class Semantico {
                         }
                 }else
                 
-                
                 if(("mas".equals(t) || "menos".equals(t) || "entre".equals(t) || "por".equals(t)) && (BandOperadores==false) && (BandRetorno == false)){
                     System.err.println("Operador Invalido en Prueba");
                     System.exit(0);
@@ -199,12 +222,8 @@ public class Semantico {
                     bandComprobacion = true;
                     BandOperadores = true;
                     
-                    //System.out.println("BN: "+bandNumero+" BB: "+bandBoleam);
-                    
                     recorrerArbol(((NodoOperacion)raiz).getOpIzquierdo());
                     recorrerArbol(((NodoOperacion)raiz).getOpDerecho());
-                    
-                    //System.out.println("BN: "+bandNumero+" BB: "+bandBoleam);
                     
                     if(bandNumero == bandBoleam ){
                         System.err.println("Operadores no compatibles");
@@ -268,6 +287,32 @@ public class Semantico {
                 
             if  (raiz instanceof NodoEscribir){
                  recorrerArbol(((NodoEscribir)raiz).getExpresion());
+            }else
+            
+            if  (raiz instanceof NodoCall){
+                
+                BandCall = true;
+                String id = ((NodoCall)raiz).getIdentificador();
+                
+                for (int i = 1; i < ambito+1; i++) {
+                    System.out.println("ID sdasdasdasdasd: "+id+" "+i);
+                    if (tablaSimbolos.BuscarSimbolo(id+" "+i) != null){
+                        tipoCompara = tablaSimbolos.BuscarSimbolo(id+" "+i).getTipo();
+                        ambitoAux = i;
+                        recorrerArbol(((NodoCall)raiz).getArgumentos());
+                        
+                        if(Correcto == false){
+                            System.err.println("Parametros de la Funcion Mal Definidos");
+                            System.exit(0);
+                        }else{
+                            tipoCompara = "";
+                            BandCall = false;
+                        }
+                            
+                        break;
+                    }
+                }        
+                    
             }
             
             raiz = raiz.getHermanoDerecha();

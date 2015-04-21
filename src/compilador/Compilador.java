@@ -35,7 +35,7 @@ public class Compilador {
 		ast.Util.imprimirAST(root);
 		TablaSimbolos ts = new TablaSimbolos();
 		System.out.println("\t\t\t     **TABLA DE SIMBOLOS**\n");
-                System.out.println("\tTIPO\t\tIDENTIFICADOR\t\tAMBITO\tDIRECCION\n");
+                System.out.println("\tTIPO\t\tIDENTIFICADOR\t\tAMBITO\tDIRECCION\tCLASIFICACION\tPos_Parametro\n");
                 ts.cargarTabla(root);
                
 		//ts.ImprimirClaves();
