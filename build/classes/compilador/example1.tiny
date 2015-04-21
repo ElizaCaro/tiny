@@ -1,63 +1,14 @@
 void XXX(int a, int b, boolean c)
 begin
-    int var;
-    var := (7*8+5)*(9/9*8);
+    int variable;
+    variable := 7;
 end;
 
 void myfun(int y,boolean cc)
 begin
-    int a,b,c;
-    boolean d,e,f;
-    a:=3;
+    int a;
     a:= 3+3;
-    a:= 3+a;
-    a:= a+a;
-    a:=a+3*3;
-    a:= a*a/2;
-    a:= a-a*y;
-    a:= b+c;
-
-    d:=true;
-    d:=false;
-    d:=e;
 end;
-
-int eliza (int z)
-begin
-boolean a;
-int b;
-
-if true
-then
-    z:=2;
-end;
-
-if false
-    then
-        z:=2;
-    end;
-
-if a
-    then
-        z:=2;
-    end;
-
-if b > 3
-    then
-        z:=2;
-    end;
-
-if b !=  7
-    then
-        z:=2;
-    else
-        z:=z+3*19;
-    end;
-
-return b;
-end;
-
-
 
 int entera(int z, boolean w)
 begin
@@ -74,35 +25,8 @@ begin
 end;
 
 begin
-    boolean c;
-    int x,i,d,aa;
-    c:=true;
-    if true
-    then
-        c:= false;
-        x:= 10;
+   int x;
+    for(x:=0 ; x < 10; x:= x+1)
+        write x;
     end;
-
-    repeat
-        x:=1;
-        d:=1+3*2+6/(i+d);
-        for(aa:=1 ; c = true ;aa:=aa+1)
-            read x;
-            write x;
-            
-            repeat
-                if x > 2
-                then
-                    c:= false;
-                else
-                    c:= true;
-                end;
-            until x > d;    
-
-        end;
-    until x > i;
-
-XXX(x,entera(x,c),c);
-
-
 end;

@@ -4,7 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/geniu_000/Documents/NetBeansProjects/Compiladores/Modificado/src/compilador/example1.tiny</file>
-            <file>file:/C:/Users/geniu_000/Documents/NetBeansProjects/Compiladores/Modificado/src/compilador/RegistroSimbolo.java</file>
+            <file>file:/C:/Users/geniu_000/Documents/NetBeansProjects/Compiladores/Modificado/src/compilador/Generador.java</file>
+            <file>file:/C:/Users/geniu_000/Documents/NetBeansProjects/Compiladores/Modificado/src/compilador/Compilador.java</file>
+            <file>file:/C:/Users/geniu_000/Documents/NetBeansProjects/Compiladores/Modificado/src/compilador/UtGen.java</file>
             <file>file:/C:/Users/geniu_000/Documents/NetBeansProjects/Compiladores/Modificado/src/compilador/Semantico.java</file>
             <file>file:/C:/Users/geniu_000/Documents/NetBeansProjects/Compiladores/Modificado/src/compilador/TablaSimbolos.java</file>
         </group>

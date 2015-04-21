@@ -35,7 +35,7 @@ public class UtGen {
 	
 	
 	public static void emitirComentario(String c){
-		if(debug) System.out.println("*      "+c);
+		//if(debug) System.out.println("*      "+c);
 	}
 
 	/* Este procedimiento emite sentencias RO (Solo Registro)

@@ -34,6 +34,7 @@ public class Generador {
 	 */
 	private static int desplazamientoTmp = 0;
 	private static TablaSimbolos tablaSimbolos = null;
+        private static int ambito = 0;
 	
 	public static void setTablaSimbolos(TablaSimbolos tabla){
 		tablaSimbolos = tabla;
@@ -59,11 +60,19 @@ public class Generador {
 	//prerequisito: Fijar la tabla de simbolos antes de generar el codigo objeto 
 	private static void generar(NodoBase nodo){
 	if(tablaSimbolos!=null){
-		if (nodo instanceof  NodoIf){
+                if (nodo instanceof NodoEstructura){
+                          generarEstructura(nodo);
+                }else if(nodo instanceof NodoFuncionRetorna){
+                          generarFuncionRetorna(nodo);
+                }else if(nodo instanceof NodoFuncionSinRetorna){
+                         generarFuncionSinRetorna(nodo);
+                }else if (nodo instanceof  NodoIf){
 			generarIf(nodo);
 		}else if (nodo instanceof  NodoRepeat){
 			generarRepeat(nodo);
-		}else if (nodo instanceof  NodoAsignacion){
+		}else if (nodo instanceof NodoFor){
+                        generarFor(nodo);
+                }else if (nodo instanceof  NodoAsignacion){
 			generarAsignacion(nodo);
 		}else if (nodo instanceof  NodoLeer){
 			generarLeer(nodo);
@@ -75,7 +84,15 @@ public class Generador {
 			generarIdentificador(nodo);
 		}else if (nodo instanceof NodoOperacion){
 			generarOperacion(nodo);
-		}else{
+		}else if (nodo instanceof NodoVariable){
+			generarVariable(nodo);
+		}else if (nodo instanceof NodoDeclaracion){
+			generarDeclaracion(nodo);
+		}else if (nodo instanceof NodoCall){
+                        //generarCall(nodo);
+                }else if (nodo instanceof NodoParametro)
+                        generarParametros(nodo);
+                else{
 			System.out.println("BUG: Tipo de nodo a generar desconocido");
 		}
 		/*Si el hijo de extrema izquierda tiene hermano a la derecha lo genero tambien*/
@@ -84,7 +101,65 @@ public class Generador {
 	}else
 		System.out.println("���ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
 }
-
+        private static void generarEstructura(NodoBase nodo){
+            NodoEstructura n = (NodoEstructura)nodo;
+            if(UtGen.debug) UtGen.emitirComentario("--> Estructura");
+                
+                generar(n.getFuncion());
+                ambito++;
+                generar(n.getBloque());
+            if(UtGen.debug) UtGen.emitirComentario("<--Fin Estructura");
+            
+        }
+        
+        private static void generarFuncionRetorna(NodoBase nodo){
+            ambito++;
+            NodoFuncionRetorna n = (NodoFuncionRetorna)nodo;
+            if(UtGen.debug) UtGen.emitirComentario("--> Funcion "+n.getIdentificador());
+            
+            if(n.getParametros() != null){
+                if(UtGen.debug) UtGen.emitirComentario("--->Parametros de: "+n.getIdentificador());
+                generar(n.getParametros());
+            }
+            
+            if(UtGen.debug) UtGen.emitirComentario("===>Secuencia");
+            generar(n.getSecuencias());
+            
+             if(UtGen.debug) UtGen.emitirComentario("<-- Funcion "+n.getIdentificador());
+        }
+        
+        private static void generarFuncionSinRetorna(NodoBase nodo){
+            ambito++;
+            NodoFuncionSinRetorna n = (NodoFuncionSinRetorna)nodo;
+            if(UtGen.debug) UtGen.emitirComentario("--> Funcion "+n.getIdentificador());
+            
+            if(n.getParametros() != null){
+                if(UtGen.debug) UtGen.emitirComentario("--->Parametros de: "+n.getIdentificador());
+                generar(n.getParametros());
+            }
+            
+            if(UtGen.debug) UtGen.emitirComentario("===>Secuencia");
+            generar(n.getSecuencias());
+            
+        }
+        
+        private static void generarParametros(NodoBase nodo){
+            NodoParametro n = (NodoParametro)nodo;
+            if(UtGen.debug) UtGen.emitirComentario("--->Identificador: "+n.getIdentificador());
+        }
+        
+        private static void generarDeclaracion(NodoBase nodo){
+            NodoDeclaracion n = (NodoDeclaracion)nodo;
+            if(UtGen.debug) UtGen.emitirComentario("--->Declarada: ");
+            generar(n.getLis_asig());
+        }
+        
+        private static void generarVariable (NodoBase nodo){
+            NodoVariable n = (NodoVariable)nodo;
+            if(UtGen.debug) UtGen.emitirComentario("Variables: "+n.getIdentificador());
+        }
+        
+        
 	private static void generarIf(NodoBase nodo){
     	NodoIf n = (NodoIf)nodo;
 		int localidadSaltoElse,localidadSaltoEnd,localidadActual;
@@ -104,7 +179,7 @@ public class Generador {
 		/*Genero la parte ELSE*/
 		if(n.getParteElse()!=null){
 			generar(n.getParteElse());
-    	}
+                }
 		//igualmente debo generar la sentencia que reserve en
 		//localidadSaltoEnd al finalizar la ejecucion de un true
 		localidadActual = UtGen.emitirSalto(0);
@@ -114,6 +189,19 @@ public class Generador {
 		if(UtGen.debug)	UtGen.emitirComentario("<- if");
 	}
 	
+        private static void generarFor(NodoBase nodo){
+            NodoFor n = (NodoFor)nodo;
+            int localidadSaltoInicio;
+		if(UtGen.debug)	UtGen.emitirComentario("-> for");
+			generar(n.getAsignacion());
+                        localidadSaltoInicio = UtGen.emitirSalto(0);
+                        generar(n.getCuerpo());
+                        generar(n.getPrueba());
+                        generar(n.getAsignacion());
+			UtGen.emitirRM_Abs("JNE", UtGen.AC, localidadSaltoInicio, "for");
+		if(UtGen.debug)	UtGen.emitirComentario("<- for");
+        }
+        
 	private static void generarRepeat(NodoBase nodo){
     	NodoRepeat n = (NodoRepeat)nodo;
 		int localidadSaltoInicio;
@@ -135,7 +223,7 @@ public class Generador {
 		/* Genero el codigo para la expresion a la derecha de la asignacion */
 		generar(n.getExpresion());
 		/* Ahora almaceno el valor resultante */
-		direccion = tablaSimbolos.getDireccion(n.getIdentificador());
+		direccion = tablaSimbolos.getDireccion(n.getIdentificador()+" "+ambito);
 		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador());
 		if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
 	}
@@ -171,7 +259,7 @@ public class Generador {
 		NodoIdentificador n = (NodoIdentificador)nodo;
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> identificador");
-		direccion = tablaSimbolos.getDireccion(n.getNombre());
+		direccion = tablaSimbolos.getDireccion(n.getNombre()+" "+ambito);
 		UtGen.emitirRM("LD", UtGen.AC, direccion, UtGen.GP, "cargar valor de identificador: "+n.getNombre());
 		if(UtGen.debug)	UtGen.emitirComentario("-> identificador");
 	}
@@ -201,14 +289,40 @@ public class Generador {
 							UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
 							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
 							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
+                                                        
+                        case	menorigual:	UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: <=");
+							UtGen.emitirRM("JLE", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC<0)");
+							UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
+							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
+							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
 							break;
+                            
+                        case	mayorigual:	UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: >=");
+							UtGen.emitirRM("JGE", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC<0)");
+							UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
+							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
+							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
+                            
+                        case    mayor:  UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: >");
+                                                        UtGen.emitirRM("JGT", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla");
+                                                        UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
+							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
+							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
+                            
 			case	igual:	UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: ==");
 							UtGen.emitirRM("JEQ", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC==0)");
 							UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
 							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
 							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
 							break;	
-			default:
+                        case	diferente:  UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: !=");
+							UtGen.emitirRM("JNE", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC==0)");
+							UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
+							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
+							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
+							break;	
+                            
+                        default:
 							UtGen.emitirComentario("BUG: tipo de operacion desconocida");
 		}
 		if(UtGen.debug)	UtGen.emitirComentario("<- Operacion: " + n.getOperacion());
