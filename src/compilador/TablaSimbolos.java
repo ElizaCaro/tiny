@@ -4,7 +4,7 @@ import ast.*;
 import java.util.*;
 
 public class TablaSimbolos {
-	private HashMap<String, RegistroSimbolo> tabla;
+	private final HashMap<String, RegistroSimbolo> tabla;
 	private int direccion;  //Contador de las localidades de memoria asignadas a la tabla
 	private int ambito;
         private String tipo;
@@ -22,12 +22,13 @@ public class TablaSimbolos {
 	}
         
         public String BuscarTipo(NodoBase raiz){
-            String tipo ="";
+            String Tipo ="";
                     if(raiz instanceof NodoIdentificador)
-                        tipo = ((NodoIdentificador)raiz).getNombre();
-            return tipo;
+                        Tipo = ((NodoIdentificador)raiz).getNombre();
+            return Tipo;
         }
        
+        @SuppressWarnings("SuspiciousIndentAfterControlStatement")
 	public void cargarTabla(NodoBase raiz){
             
             while (raiz != null) {
@@ -151,9 +152,9 @@ public class TablaSimbolos {
 	public boolean InsertarSimbolo(String ident, int numLinea){
 		RegistroSimbolo simbolo;
                 
-                String identificador = new String(ident+" "+ambito);
+                String identificador = ident+" "+ambito;
                 
-                if(tipo != ""){
+                if(!"".equals(tipo)){
                     if(tabla.containsKey(identificador) && BuscarSimbolo(identificador).getAmbito() == ambito){
 		        return false;
                     }else{
@@ -180,12 +181,11 @@ public class TablaSimbolos {
 	
 	public void ImprimirClaves(){
 		System.out.println("*** Tabla de Simbolos ***");
-		for( Iterator <String>it = tabla.keySet().iterator(); it.hasNext();) { 
-            String s = (String)it.next();
-	    System.out.print("Tipo: "+BuscarSimbolo(s).getTipo());
-            System.out.print("\t Identificador: "+BuscarSimbolo(s).getIdentificador());
-            System.out.println("\t\t Ambito: "+BuscarSimbolo(s).getAmbito());
-		}
+            for (String s : tabla.keySet()) {
+                System.out.print("Tipo: "+BuscarSimbolo(s).getTipo());
+                System.out.print("\t Identificador: "+BuscarSimbolo(s).getIdentificador());
+                System.out.println("\t\t Ambito: "+BuscarSimbolo(s).getAmbito());
+            }
 	}
 
 	public int getDireccion(String Clave){
@@ -204,14 +204,12 @@ public class TablaSimbolos {
         System.out.println("Ambito: "+ambito+" Com: "+tipoCompara);
         
         
-        for (Iterator <String>it = tabla.keySet().iterator(); it.hasNext();){
-            String s = (String)it.next();
-            
-            if( BuscarSimbolo(s).getAmbito() == ambito && "PFUN".equals(BuscarSimbolo(s).getClasificacion()) && BuscarSimbolo(s).getTipo() == tipoCompara && BuscarSimbolo(s).getPos_Parametro() == p){
-                System.out.println(BuscarSimbolo(s).getIdentificador()+" pos: "+BuscarSimbolo(s).getPos_Parametro());
-                return true;
+            for (String s : tabla.keySet()) {
+                if( BuscarSimbolo(s).getAmbito() == ambito && "PFUN".equals(BuscarSimbolo(s).getClasificacion()) && BuscarSimbolo(s).getTipo().equals(tipoCompara) && BuscarSimbolo(s).getPos_Parametro() == p){
+                    System.out.println(BuscarSimbolo(s).getIdentificador()+" pos: "+BuscarSimbolo(s).getPos_Parametro());
+                    return true;
+                }
             }
-         }
         return false;
     }
 }

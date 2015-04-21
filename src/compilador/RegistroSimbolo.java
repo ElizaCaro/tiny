@@ -1,8 +1,8 @@
 package compilador;
 
 public class RegistroSimbolo {
-	private String identificador;
-	private int NumLinea;
+	private final String identificador;
+	private final int NumLinea;
 	private int DireccionMemoria;
 	private int ambito;
         private String tipo;
