@@ -1,21 +1,41 @@
-int suma()
+int suma(int y,int z)
 begin
-	int x,y,z;
+	int x;
 	x:= y+z;
 return x;
 end;
 
-void toma()
+int luigy (int xx)
 begin
-	int y;
-	y:=2;
+    int w;
+    w:= xx*2;
+return w;
+end;
+
+int eliza(int a)
+begin
+int x;
+    if a > 10
+    then
+        x:= 666;
+    else
+        x:= 333;
+    end;
+
+return x;
 end;
 
 begin
 	int x,y,z;
 	read y;
 	read z;
-	x:= suma();
-	toma();
+	x:= suma(y,z);
+        
+        y:=luigy(x);
+        
+        z:= eliza(y);
+	
 	write x;
+        write y;
+        write z;
 end;
