@@ -10,6 +10,15 @@ public class TablaSimbolos {
         private String tipo;
         private String Clasificacion;
         private int pos;
+        private int IniMain;
+
+    public int getAmbito() {
+        return ambito;
+    }
+
+    public void setAmbito(int ambito) {
+        this.ambito = ambito;
+    }
         
 	public TablaSimbolos() {
 		super();
@@ -43,7 +52,9 @@ public class TablaSimbolos {
                 cargarTabla(((NodoEstructura)raiz).getFuncion());
                 
                 ambito++;
+                
                 cargarTabla(((NodoEstructura)raiz).getBloque());
+                
             }else
             
             if  (raiz instanceof NodoFuncionRetorna){
@@ -69,6 +80,7 @@ public class TablaSimbolos {
                 pos = 0;
                 tipo = "VOID";
                 Clasificacion = "FUN";
+                System.out.println("Numero Linea: ");
                 InsertarSimbolo(((NodoFuncionSinRetorna)raiz).getIdentificador(), direccion);
                 tipo = "";
                 
@@ -158,10 +170,11 @@ public class TablaSimbolos {
                     if(tabla.containsKey(identificador) && BuscarSimbolo(identificador).getAmbito() == ambito){
 		        return false;
                     }else{
-                    
+                        
                         simbolo= new RegistroSimbolo(ident,numLinea,direccion++,ambito,tipo, Clasificacion,pos);
 			tabla.put(identificador,simbolo);
                         
+                        System.out.println(numLinea);
                         System.out.print("\t"+tipo);
                         System.out.print("\t\t"+ident);
                         System.out.print("\t\t\t"+ambito);

@@ -12,6 +12,22 @@ public class UtGen {
 	private static int instruccionMasAlta=0;	//Almacena la direccion de la instruccion que ha resultado ser la mayor hasta ahora 
 	public static boolean debug=false;
 
+        public static int getInstruccionActual() {
+            return instruccionActual;
+        }
+
+        public static void setInstruccionActual(int instruccionActual) {
+            UtGen.instruccionActual = instruccionActual;
+        }
+
+        public static int getInstruccionMasAlta() {
+            return instruccionMasAlta;
+        }
+
+        public static void setInstruccionMasAlta(int instruccionMasAlta) {
+            UtGen.instruccionMasAlta = instruccionMasAlta;
+        }
+
 	/* PC = program counter, registro[7] donde se almacena la direccion (linea)
 	 *  actual de ejecucion del codigo objeto 
 	 */
@@ -27,11 +43,15 @@ public class UtGen {
 	 */
 	public static int  GP=5;
 
-	/* Defino al registro[0] como el acumulador 1 */
+	/* Defino al registro[0 - 4] como free         */
 	public static int  AC=0;
 
-	/* Defino al registro[1] como el acumulador 2 */
+	
 	public static int  AC1=1;
+        public static int  AC2=2;
+        public static int  AC3=3;
+        public static int  AC4=4;
+       /* +++++++++++++++++++++++++++++++++++++++++++ */ 
 	
 	
 	public static void emitirComentario(String c){

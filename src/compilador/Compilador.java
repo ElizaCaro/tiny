@@ -43,7 +43,10 @@ public class Compilador {
                     Semantico se = new Semantico(ts);
                     se.recorrerArbol(root);
                 //
-		Generador.setTablaSimbolos(ts);
+                    
+                   // System.out.println("Cantidad de ambitos: "+ts.getAmbito());
+                    
+		Generador.setTablaSimbolos(ts,2);
 		Generador.generarCodigoObjeto(root);
 	}
 

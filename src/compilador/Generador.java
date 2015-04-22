@@ -35,9 +35,11 @@ public class Generador {
 	private static int desplazamientoTmp = 0;
 	private static TablaSimbolos tablaSimbolos = null;
         private static int ambito = 0;
+        private static int main; 
 	
-	public static void setTablaSimbolos(TablaSimbolos tabla){
+	public static void setTablaSimbolos(TablaSimbolos tabla,int a){
 		tablaSimbolos = tabla;
+                
 	}
 	
 	public static void generarCodigoObjeto(NodoBase raiz){
@@ -89,7 +91,7 @@ public class Generador {
 		}else if (nodo instanceof NodoDeclaracion){
 			generarDeclaracion(nodo);
 		}else if (nodo instanceof NodoCall){
-                        //generarCall(nodo);
+                         generarCall(nodo);
                 }else if (nodo instanceof NodoParametro)
                         generarParametros(nodo);
                 else{
@@ -106,15 +108,29 @@ public class Generador {
             if(UtGen.debug) UtGen.emitirComentario("--> Estructura");
                 
                 generar(n.getFuncion());
+                
                 ambito++;
+                main = UtGen.getInstruccionActual();
+                System.out.println("Main: "+main);
                 generar(n.getBloque());
+                
             if(UtGen.debug) UtGen.emitirComentario("<--Fin Estructura");
             
         }
         
         private static void generarFuncionRetorna(NodoBase nodo){
+             NodoFuncionRetorna n = (NodoFuncionRetorna)nodo;
+             
             ambito++;
-            NodoFuncionRetorna n = (NodoFuncionRetorna)nodo;
+            int RegFun = UtGen.getInstruccionActual();
+            System.out.println("Inicio de "+n.getIdentificador()+": "+RegFun);
+            int direccion = tablaSimbolos.getDireccion(n.getIdentificador()+" "+ambito);
+            UtGen.emitirRM("LDC",UtGen.AC, RegFun+2,UtGen.GP ,"Constante de inicio de funcion");
+            UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "Almaceno Direccion de Inicio de: "+n.getIdentificador());
+            
+            
+            
+           
             if(UtGen.debug) UtGen.emitirComentario("--> Funcion "+n.getIdentificador());
             
             if(n.getParametros() != null){
@@ -129,8 +145,16 @@ public class Generador {
         }
         
         private static void generarFuncionSinRetorna(NodoBase nodo){
-            ambito++;
             NodoFuncionSinRetorna n = (NodoFuncionSinRetorna)nodo;
+            
+            ambito++;
+            int RegFun = UtGen.getInstruccionActual();
+            System.out.println("Inicio de "+n.getIdentificador()+": "+RegFun);
+            int direccion = tablaSimbolos.getDireccion(n.getIdentificador()+" "+ambito);
+            UtGen.emitirRM("LDC",UtGen.AC, RegFun+2,UtGen.GP ,"Constante de inicio de funcion");
+            UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "Almaceno Direccion de Inicio de: "+n.getIdentificador());
+                
+            
             if(UtGen.debug) UtGen.emitirComentario("--> Funcion "+n.getIdentificador());
             
             if(n.getParametros() != null){
@@ -146,6 +170,13 @@ public class Generador {
         private static void generarParametros(NodoBase nodo){
             NodoParametro n = (NodoParametro)nodo;
             if(UtGen.debug) UtGen.emitirComentario("--->Identificador: "+n.getIdentificador());
+            int direccion = tablaSimbolos.getDireccion(n.getIdentificador()+" "+ambito);
+            UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "Almaceno Constante "+n.getIdentificador());
+            
+            
+            
+            
+            
         }
         
         private static void generarDeclaracion(NodoBase nodo){
@@ -202,6 +233,21 @@ public class Generador {
 		if(UtGen.debug)	UtGen.emitirComentario("<- for");
         }
         
+        private static void generarCall(NodoBase nodo){
+            NodoCall n = (NodoCall)nodo;
+            
+            for (int i = 0; i < tablaSimbolos.getAmbito(); i++) {
+                if(tablaSimbolos.BuscarSimbolo(n.getIdentificador()+" "+i)!=null){
+                   int direccion = tablaSimbolos.BuscarSimbolo(n.getIdentificador()+" "+i).getDireccionMemoria();
+                   UtGen.emitirRM("LDC", UtGen.AC4, UtGen.getInstruccionActual()+3, UtGen.GP, "Linea de llamada");
+                   UtGen.emitirRM("LD", UtGen.AC, direccion, UtGen.GP,"Salto a la linea: "+direccion);
+                   UtGen.emitirRM("LDA", UtGen.PC, UtGen.AC, UtGen.AC,"Salto a la linea: "+direccion);
+                   break;
+                }
+            }
+            
+        }
+        
 	private static void generarRepeat(NodoBase nodo){
     	NodoRepeat n = (NodoRepeat)nodo;
 		int localidadSaltoInicio;
@@ -233,7 +279,7 @@ public class Generador {
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> leer");
 		UtGen.emitirRO("IN", UtGen.AC, 0, 0, "leer: lee un valor entero ");
-		direccion = tablaSimbolos.getDireccion(n.getIdentificador());
+		direccion = tablaSimbolos.getDireccion(n.getIdentificador()+" "+ambito);
 		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "leer: almaceno el valor entero leido en el id "+n.getIdentificador());
 		if(UtGen.debug)	UtGen.emitirComentario("<- leer");
 	}

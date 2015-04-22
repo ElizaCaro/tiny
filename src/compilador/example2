@@ -1,0 +1,21 @@
+int suma()
+begin
+	int x,y,z;
+	x:= y+z;
+return x;
+end;
+
+void toma()
+begin
+	int y;
+	y:=2;
+end;
+
+begin
+	int x,y,z;
+	read y;
+	read z;
+	x:= suma();
+	toma();
+	write x;
+end;
