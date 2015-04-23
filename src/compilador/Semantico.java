@@ -94,9 +94,10 @@ public void recorrerArbol(NodoBase raiz){
                 if (BandCall == true){
                     pos++;
                     cant++;
+                    System.out.println("compaaa: "+comp);
                     comp+= tablaSimbolos.getParametros(ambitoAux,tipoCompara,pos);
                 }else{
-                    comp = 0;
+                  
                     pos = 0;
                     BandCall = false;
                     
@@ -311,7 +312,8 @@ public void recorrerArbol(NodoBase raiz){
             //<editor-fold defaultstate="collapsed" desc="BandCall false">
             if(BandAsig == false){
                 // Si BandCall false llamo procedimiento
-                
+                comp = 0;
+                cant = 0;
                 boolean band = false;
                 String id = ((NodoCall)raiz).getIdentificador();
                 for (int i = 1; i < ambito+1; i++) {
@@ -325,6 +327,7 @@ public void recorrerArbol(NodoBase raiz){
                                 ambitoAux = i;
                                 recorrerArbol(((NodoCall)raiz).getArgumentos());
                                 
+                                System.out.println("comp: "+comp+" tam: "+tam);
                                 if(comp != tam){
                                     System.err.println("Parametros de la Funcion Mal Definidos");
                                     System.exit(0);
@@ -340,8 +343,6 @@ public void recorrerArbol(NodoBase raiz){
                                 System.exit(0);
                             }
                             
-                            tam = 0;
-                            cant = 0;
                              
                         }else{
                             System.err.println("Mal Uso de Funcion");
@@ -358,13 +359,16 @@ public void recorrerArbol(NodoBase raiz){
                     System.exit(0);
                 }
                 
-                comp = 0;
+                
             }
          //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc="BandCall True">
             else{
              // Si BandCall es true llamo asignacion   
                 boolean band = false;
+                pos = 0;
+                comp = 0;
+                cant = 0;
                 
                 String id = ((NodoCall)raiz).getIdentificador();
                 System.out.println("IDENTIFICADOR: "+id);
@@ -426,10 +430,7 @@ public void recorrerArbol(NodoBase raiz){
                     System.err.println("Funcion No Declarada");
                     System.exit(0);
                 }
-                  pos = 0;
-                  comp = 0;
-                  cant = 0;
-            }
+                              }
         //</editor-fold>
             
         }

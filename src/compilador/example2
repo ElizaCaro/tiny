@@ -37,8 +37,12 @@ begin
         read y;
         read z;
         MostrarCalculo(x,y,z);
-        x:= x + suma(y,z);
+        x:= suma(y,z);
         write x;
         y:= eliza(x);   
         write y;
+        
+        for(x:=0; x < 5; x:=x+1)
+            write x;
+        end; 
 end;
