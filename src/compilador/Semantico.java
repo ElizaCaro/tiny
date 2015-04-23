@@ -61,7 +61,7 @@ public void recorrerArbol(NodoBase raiz){
             recorrerArbol(((NodoFuncionRetorna)raiz).getExpresion()); 
 
             if(!tipo.equals(tipoCompara)){
-                System.err.println("******* Tipos Incompatibles g ********");
+                System.err.println("******* Dato de Retorno Incompatible  ********");
                 System.exit(0);
             }           
 
@@ -134,7 +134,7 @@ public void recorrerArbol(NodoBase raiz){
         if (raiz instanceof NodoAsignacion){
 
             String temporal = ((NodoAsignacion)raiz).getIdentificador();
-          //  System.out.println("temporal: "+temporal);
+            System.out.println("temporal: "+temporal);
 
             if(tablaSimbolos.BuscarSimbolo(temporal+" "+ambito) != null){
 
@@ -191,9 +191,15 @@ public void recorrerArbol(NodoBase raiz){
             String t = ""+((NodoOperacion)raiz).getOperacion();
             
             if(BandAsig == true){
+                System.out.println("BNI: "+bandNumero+" BBI: "+bandBoleam);
                 recorrerArbol(((NodoOperacion)raiz).getOpIzquierdo());
+                System.out.println("BNI: "+bandNumero+" BBI: "+bandBoleam);
+                System.out.println("");
+                System.out.println("BND: "+bandNumero+" BBD: "+bandBoleam);
                 recorrerArbol(((NodoOperacion)raiz).getOpDerecho());
-
+                System.out.println("BND: "+bandNumero+" BBD: "+bandBoleam);
+                
+                
                 if(bandNumero == bandBoleam ){
                     System.err.println("Operadores no compatibles");
                     System.exit(0);
@@ -206,6 +212,8 @@ public void recorrerArbol(NodoBase raiz){
                         System.exit(0);
                     }
                  }
+                
+               
                 //asignacion de funciones
             }else{
                 
@@ -222,9 +230,9 @@ public void recorrerArbol(NodoBase raiz){
 
                     recorrerArbol(((NodoOperacion)raiz).getOpIzquierdo());
                     recorrerArbol(((NodoOperacion)raiz).getOpDerecho());
-
+                    
                     if(bandNumero == bandBoleam ){
-                        System.err.println("Operadores no compatibles");
+                        System.err.println("Operadores no compatibles ");
                         System.exit(0);
                     }
 
@@ -234,6 +242,8 @@ public void recorrerArbol(NodoBase raiz){
                         System.exit(0);
                     }
                 }
+                
+                
             }
         }
 
@@ -324,12 +334,15 @@ public void recorrerArbol(NodoBase raiz){
                                 }
                             }
                             
+                            System.out.println("tam: "+tam+" cant: "+cant);
                             if(tam != cant){
                                 System.err.println("Numero de parametros distintos");
                                 System.exit(0);
                             }
                             
-                            
+                            tam = 0;
+                            cant = 0;
+                             
                         }else{
                             System.err.println("Mal Uso de Funcion");
                             System.exit(0);
@@ -396,6 +409,12 @@ public void recorrerArbol(NodoBase raiz){
                         } 
                         
                          tipoCompara = tablaSimbolos.BuscarSimbolo(id+" "+i).getTipo();
+
+                         if("INT".equals(tipoCompara))
+                             bandNumero = true;
+                         else
+                             bandBoleam = true;
+                         
                          band = true;   
                          break;
                     }

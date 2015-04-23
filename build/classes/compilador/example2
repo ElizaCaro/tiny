@@ -1,3 +1,10 @@
+void MostrarCalculo(int a,int b, int c)
+begin
+    int result;
+    result:=2*a*b + c*c+4/2;
+    write result;
+end;
+
 int suma(int y,int z)
 begin
 	int x;
@@ -5,21 +12,20 @@ begin
 return x;
 end;
 
-int luigy (int xx)
-begin
-    int w;
-    w:= xx*2;
-return w;
-end;
 
 int eliza(int a)
 begin
-int x;
+    int x;
     if a > 10
     then
-        x:= 666;
-    else
-        x:= 333;
+        a:= 0;
+        repeat
+            a:=a+1;
+            x:= a*2;
+            write x;
+        until a < 5;
+    else    
+        x:= 1;
     end;
 
 return x;
@@ -27,15 +33,12 @@ end;
 
 begin
 	int x,y,z;
-	read y;
-	read z;
-	x:= suma(y,z);
-        
-        y:=luigy(x);
-        
-        z:= eliza(y);
-	
-	write x;
+        read x;
+        read y;
+        read z;
+        MostrarCalculo(x,y,z);
+        x:= x + suma(y,z);
+        write x;
+        y:= eliza(x);   
         write y;
-        write z;
 end;
