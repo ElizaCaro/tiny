@@ -10,7 +10,7 @@ public class TablaSimbolos {
         private String tipo;
         private String Clasificacion;
         private int pos;
-        private int IniMain;
+        
 
     public int getAmbito() {
         return ambito;
@@ -80,7 +80,7 @@ public class TablaSimbolos {
                 pos = 0;
                 tipo = "VOID";
                 Clasificacion = "FUN";
-                System.out.println("Numero Linea: ");
+                //System.out.println("Numero Linea: ");
                 InsertarSimbolo(((NodoFuncionSinRetorna)raiz).getIdentificador(), direccion);
                 tipo = "";
                 
@@ -174,7 +174,7 @@ public class TablaSimbolos {
                         simbolo= new RegistroSimbolo(ident,numLinea,direccion++,ambito,tipo, Clasificacion,pos);
 			tabla.put(identificador,simbolo);
                         
-                        System.out.println(numLinea);
+                        //System.out.println(numLinea);
                         System.out.print("\t"+tipo);
                         System.out.print("\t\t"+ident);
                         System.out.print("\t\t\t"+ambito);
@@ -223,17 +223,11 @@ public class TablaSimbolos {
         
         
     public int getParametros(int ambito,String tipoCompara, int p) {
-        String aux = "";
-       // System.out.println("Ambito: "+ambito+" Com: "+tipoCompara+" pos: "+p);
-        
+             
         int i = 0;
         
             for (String s : tabla.keySet()) {
                 if( BuscarSimbolo(s).getAmbito() == ambito && "PFUN".equals(BuscarSimbolo(s).getClasificacion()) && BuscarSimbolo(s).getTipo().equals(tipoCompara) && BuscarSimbolo(s).getPos_Parametro() == p){
-                    /*System.out.println("BuscarSimbolo(s).getAmbito() "+BuscarSimbolo(s).getAmbito());
-                    System.out.println("\"PFUN\".equals(BuscarSimbolo(s).getClasificacion(): "+BuscarSimbolo(s).getClasificacion());
-                    System.out.println("BuscarSimbolo(s).getTipo().equals(tipoCompara): "+BuscarSimbolo(s).getTipo());
-                    System.out.println("BuscarSimbolo(s).getPos_Parametro(): "+BuscarSimbolo(s).getPos_Parametro());*/
                     i++;
                 }
             }

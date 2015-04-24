@@ -1,0 +1,12 @@
+void cicloRepeat()
+begin   
+    int x;
+    x:=1;
+    repeat
+        write x;
+    until x < 10;
+end;
+
+begin
+    cicloRepeat();
+end;

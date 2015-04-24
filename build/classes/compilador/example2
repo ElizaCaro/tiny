@@ -1,48 +1,57 @@
-void MostrarCalculo(int a,int b, int c)
+void cicloFor(int cant)
 begin
-    int result;
-    result:=2*a*b + c*c+4/2;
-    write result;
-end;
-
-int suma(int y,int z)
-begin
-	int x;
-	x:= y+z;
-return x;
-end;
-
-
-int eliza(int a)
-begin
-    int x;
-    if a > 10
-    then
-        a:= 0;
-        repeat
-            a:=a+1;
-            x:= a*2;
-            write x;
-        until a < 5;
-    else    
-        x:= 1;
+    int i;
+    int resul;
+    for(i:=0; i < cant; i:= i +1)
+        if i < 5
+        then
+            resul:= i*cant;
+            write resul;
+        else
+            write i;
+        end;
     end;
+end;
 
+int cicloRepeat(int x, int y)
+begin
+int condi;
+condi:=0;
+    repeat
+        x:= x*y*2;
+        condi:=condi+1;
+        write x;
+    until condi <= 10;
 return x;
 end;
 
+boolean cicloIF(boolean a, int x)
 begin
-	int x,y,z;
-        read x;
-        read y;
-        read z;
-        MostrarCalculo(x,y,z);
-        x:= suma(y,z);
-        write x;
-        y:= eliza(x);   
-        write y;
-        
-        for(x:=0; x < 5; x:=x+1)
-            write x;
-        end; 
+    if a = true and x < 10
+    then
+        a:= false;
+    else
+        a:= true;
+    end;
+return a;
+end;
+
+begin
+    int x,y,z,repite;
+    boolean si,a;
+    a:= true;
+    read x;
+    read y;
+    read z;
+    
+    cicloFor(x);
+    repite:= cicloRepeat(y,z);
+    si:= cicloIF(a,repite);
+    
+write repite;
+write si;
+
+x:= cicloRepeat(x,x) + cicloRepeat(y,y);
+write x;
+
 end;

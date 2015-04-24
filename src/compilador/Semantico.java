@@ -19,6 +19,7 @@ public class Semantico {
     boolean BandRetorno = false;
     boolean BandCall = false;
     boolean Correcto = false;
+    boolean Bandera = false;
     int ambitoAux = 0;
     int pos = 0;
     int cant = 0;
@@ -80,7 +81,7 @@ public void recorrerArbol(NodoBase raiz){
         if  (raiz instanceof NodoFuncionSinRetorna){
             ambito++;
             recorrerArbol(((NodoFuncionSinRetorna)raiz).getSecuencias());
-        }
+         }
 //</editor-fold>
         else           
         //<editor-fold defaultstate="collapsed" desc="NodoIdentificador">
@@ -94,7 +95,6 @@ public void recorrerArbol(NodoBase raiz){
                 if (BandCall == true){
                     pos++;
                     cant++;
-                    System.out.println("compaaa: "+comp);
                     comp+= tablaSimbolos.getParametros(ambitoAux,tipoCompara,pos);
                 }else{
                   
@@ -135,7 +135,7 @@ public void recorrerArbol(NodoBase raiz){
         if (raiz instanceof NodoAsignacion){
 
             String temporal = ((NodoAsignacion)raiz).getIdentificador();
-            System.out.println("temporal: "+temporal);
+           
 
             if(tablaSimbolos.BuscarSimbolo(temporal+" "+ambito) != null){
 
@@ -192,14 +192,13 @@ public void recorrerArbol(NodoBase raiz){
             String t = ""+((NodoOperacion)raiz).getOperacion();
             
             if(BandAsig == true){
-                System.out.println("BNI: "+bandNumero+" BBI: "+bandBoleam);
-                recorrerArbol(((NodoOperacion)raiz).getOpIzquierdo());
-                System.out.println("BNI: "+bandNumero+" BBI: "+bandBoleam);
-                System.out.println("");
-                System.out.println("BND: "+bandNumero+" BBD: "+bandBoleam);
-                recorrerArbol(((NodoOperacion)raiz).getOpDerecho());
-                System.out.println("BND: "+bandNumero+" BBD: "+bandBoleam);
                 
+                bandBoleam = false;
+                bandNumero = false;
+                
+                recorrerArbol(((NodoOperacion)raiz).getOpIzquierdo());
+                
+                recorrerArbol(((NodoOperacion)raiz).getOpDerecho());
                 
                 if(bandNumero == bandBoleam ){
                     System.err.println("Operadores no compatibles");
@@ -224,24 +223,35 @@ public void recorrerArbol(NodoBase raiz){
                     System.err.println("Operador Invalido en Prueba");
                     System.exit(0);
                 }else{
-
+                    
+                if (BandOperadores == false && ("and".equals(t) || "or".equals(t))){
+                    Bandera = true;
+                }
                     
                     bandComprobacion = true;
                     BandOperadores = true;
-
+                    
+                    
                     recorrerArbol(((NodoOperacion)raiz).getOpIzquierdo());
                     recorrerArbol(((NodoOperacion)raiz).getOpDerecho());
                     
-                    if(bandNumero == bandBoleam ){
-                        System.err.println("Operadores no compatibles ");
-                        System.exit(0);
-                    }
-
-                    if(bandBoleam == true && ("menor".equals(t) || "mayor".equals(t) || "menorigual".equals(t) || "mayorigual".equals(t) ))
+                    System.out.println("t: "+t);
+                if(bandBoleam == true && ("menor".equals(t) || "mayor".equals(t) || "menorigual".equals(t) || "mayorigual".equals(t)) && Bandera == false)
                     {
                         System.err.println("Operador No Compatible con Booleanos");
                         System.exit(0);
+                    }    
+                
+                    System.out.println("Bandera: "+Bandera);
+                
+                if(Bandera == false)   
+                    if(bandNumero == bandBoleam ){
+                        System.err.println("Operadores no compatibles");
+                        System.exit(0);
                     }
+                
+                
+                    
                 }
                 
                 
